@@ -1,1336 +1,484 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BitGo — The Infrastructure for Digital Assets</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- External Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-    <script src="https://unpkg.com/swiper@10/swiper-bundle.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/swiper@10/swiper-bundle.min.css">
-
-    <style>
-        :root {
-            --apple-dark: #1d1d1f;
-            --apple-light: #f5f5f7;
-            --white: #ffffff;
-            --black: #000000;
-            --gray-dark: #86868b;
-            --gray-light: #6e6e73;
-            --blue: #007aff;
-            --text-dark: #1d1d1f;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            font-size: 17px;
-            scroll-behavior: auto;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.47059;
-            font-weight: 400;
-            letter-spacing: -0.022em;
-            background: var(--white);
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-
-        /* Typography */
-        .display {
-            font-size: clamp(48px, 8vw, 96px);
-            font-weight: 700;
-            line-height: 1.05;
-            letter-spacing: -0.015em;
-        }
-
-        .display-large {
-            font-size: clamp(64px, 12vw, 144px);
-            font-weight: 700;
-            line-height: 1.02;
-            letter-spacing: -0.02em;
-        }
-
-        .headline {
-            font-size: clamp(32px, 5vw, 56px);
-            font-weight: 700;
-            line-height: 1.07;
-            letter-spacing: -0.015em;
-        }
-
-        .title {
-            font-size: clamp(24px, 3vw, 32px);
-            font-weight: 600;
-            line-height: 1.125;
-            letter-spacing: -0.01em;
-        }
-
-        .body-large {
-            font-size: clamp(19px, 2vw, 21px);
-            line-height: 1.381;
-            font-weight: 400;
-        }
-
-        .body {
-            font-size: 17px;
-            line-height: 1.47059;
-            font-weight: 400;
-        }
-
-        /* Layout */
-        .section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 100px 0;
-        }
-
-        .section-dark {
-            background: var(--apple-dark);
-            color: var(--white);
-        }
-
-        .section-light {
-            background: var(--white);
-            color: var(--text-dark);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 0 22px;
-        }
-
-        .container-wide {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 22px;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 0.5px solid rgba(0, 0, 0, 0.18);
-            transition: all 0.3s ease;
-        }
-
-        nav.dark {
-            background: rgba(29, 29, 31, 0.72);
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.18);
-        }
-
-        nav.dark .logo,
-        nav.dark .nav-links a {
-            color: var(--white);
-        }
-
-        .nav-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 48px;
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 0 22px;
-        }
-
-        .logo {
-            font-size: 21px;
-            font-weight: 700;
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-        }
-
-        .nav-links a {
-            color: var(--text-dark);
-            text-decoration: none;
-            font-size: 17px;
-            font-weight: 400;
-            transition: color 0.3s ease;
-            opacity: 0.8;
-        }
-
-        .nav-links a:hover {
-            opacity: 1;
-        }
-
-        .menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .hamburger {
-            width: 20px;
-            height: 20px;
-            position: relative;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 100%;
-            height: 1px;
-            background: currentColor;
-            position: absolute;
-            transition: all 0.3s ease;
-        }
-
-        .hamburger span:nth-child(1) { top: 6px; }
-        .hamburger span:nth-child(2) { top: 10px; }
-        .hamburger span:nth-child(3) { top: 14px; }
-
-        /* Hero */
-        .hero {
-            background: var(--apple-dark);
-            color: var(--white);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-badge {
-            font-size: 19px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 20px;
-            font-weight: 400;
-        }
-
-        .hero h1 {
-            margin-bottom: 20px;
-        }
-
-        .hero-subtitle {
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 60px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Stats Section */
-        .stats {
-            background: var(--white);
-            color: var(--text-dark);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 80px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: clamp(48px, 8vw, 80px);
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: 12px;
-            color: var(--text-dark);
-        }
-
-        .stat-label {
-            font-size: 19px;
-            color: var(--gray-light);
-            font-weight: 400;
-        }
-
-        /* Products Section */
-        .products {
-            background: var(--apple-dark);
-            color: var(--white);
-            min-height: 500vh;
-            position: relative;
-        }
-
-        .products-sticky {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .product-showcase {
-            text-align: center;
-            position: relative;
-        }
-
-        .product-counter {
-            font-size: 17px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-
-        .product-title {
-            margin-bottom: 24px;
-        }
-
-        .product-description {
-            max-width: 600px;
-            margin: 0 auto 40px;
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .product-visual {
-            width: 400px;
-            height: 300px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 18px;
-            margin: 60px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 48px;
-        }
-
-        /* Philosophy Section */
-        .philosophy {
-            background: var(--white);
-            color: var(--text-dark);
-        }
-
-        .philosophy-intro {
-            text-align: center;
-            margin-bottom: 100px;
-        }
-
-        .philosophy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 60px;
-        }
-
-        .philosophy-item {
-            text-align: center;
-        }
-
-        .philosophy-number {
-            font-size: 17px;
-            color: var(--gray-light);
-            margin-bottom: 20px;
-            font-weight: 500;
-        }
-
-        .philosophy-title {
-            margin-bottom: 16px;
-        }
-
-        .philosophy-description {
-            color: var(--gray-light);
-            line-height: 1.5;
-        }
-
-        /* Features Section */
-        .features {
-            background: var(--apple-dark);
-            color: var(--white);
-            min-height: 400vh;
-            position: relative;
-        }
-
-        .features-sticky {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .feature-showcase {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 120px;
-            align-items: center;
-        }
-
-        .feature-content {
-            text-align: left;
-        }
-
-        .feature-number {
-            font-size: 17px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 24px;
-            font-weight: 500;
-        }
-
-        .feature-title {
-            margin-bottom: 24px;
-        }
-
-        .feature-description {
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.5;
-        }
-
-        .feature-visual {
-            width: 100%;
-            height: 400px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 64px;
-        }
-
-        /* Clients Section */
-        .clients {
-            background: var(--white);
-            color: var(--text-dark);
-        }
-
-        .clients-intro {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .swiper {
-            overflow: visible;
-            padding: 0 22px;
-        }
-
-        .client-card {
-            background: var(--apple-light);
-            border-radius: 18px;
-            padding: 48px;
-            text-align: center;
-            height: auto;
-        }
-
-        .client-quote {
-            font-size: 24px;
-            line-height: 1.4;
-            margin-bottom: 32px;
-            font-weight: 500;
-        }
-
-        .client-author {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-
-        .client-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        .client-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .client-role {
-            color: var(--gray-light);
-            font-size: 15px;
-        }
-
-        .swiper-pagination {
-            position: relative;
-            margin-top: 48px;
-        }
-
-        .swiper-pagination-bullet {
-            width: 8px;
-            height: 8px;
-            background: var(--gray-light);
-            opacity: 1;
-        }
-
-        .swiper-pagination-bullet-active {
-            background: var(--text-dark);
-        }
-
-        /* Resources Section */
-        .resources {
-            background: var(--apple-dark);
-            color: var(--white);
-        }
-
-        .resources-intro {
-            text-align: center;
-            margin-bottom: 80px;
-        }
-
-        .resources-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .resource-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 18px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .resource-card:hover {
-            transform: translateY(-8px);
-        }
-
-        .resource-image {
-            height: 200px;
-            background: rgba(255, 255, 255, 0.1);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .resource-tag {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            background: rgba(0, 0, 0, 0.6);
-            color: var(--white);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .resource-content {
-            padding: 32px;
-        }
-
-        .resource-title {
-            font-size: 21px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }
-
-        .resource-excerpt {
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.5;
-            margin-bottom: 24px;
-        }
-
-        .resource-link {
-            color: var(--blue);
-            text-decoration: none;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: gap 0.3s ease;
-        }
-
-        .resource-link:hover {
-            gap: 12px;
-        }
-
-        /* CTA Section */
-        .cta {
-            background: var(--white);
-            color: var(--text-dark);
-            text-align: center;
-        }
-
-        .cta h2 {
-            margin-bottom: 24px;
-        }
-
-        .cta-subtitle {
-            color: var(--gray-light);
-            margin-bottom: 48px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 24px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 16px 32px;
-            border-radius: 980px;
-            text-decoration: none;
-            font-weight: 400;
-            font-size: 17px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 160px;
-        }
-
-        .btn-primary {
-            background: var(--blue);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background: #0051d5;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--blue);
-            border: 1px solid var(--blue);
-        }
-
-        .btn-secondary:hover {
-            background: var(--blue);
-            color: var(--white);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--apple-dark);
-            color: var(--white);
-            padding: 80px 0 40px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 80px;
-            margin-bottom: 60px;
-        }
-
-        .footer-brand h3 {
-            font-size: 21px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .footer-brand p {
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.5;
-            max-width: 300px;
-        }
-
-        .footer-column h4 {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-
-        .footer-column a {
-            display: block;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            margin-bottom: 16px;
-            font-size: 17px;
-            transition: color 0.3s ease;
-        }
-
-        .footer-column a:hover {
-            color: var(--white);
-        }
-
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 40px;
-            border-top: 0.5px solid rgba(255, 255, 255, 0.18);
-            flex-wrap: wrap;
-            gap: 24px;
-        }
-
-        .footer-bottom p {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 15px;
-        }
-
-        .footer-credit a {
-            color: var(--blue);
-            text-decoration: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 834px) {
-            html { font-size: 16px; }
-            
-            .section { padding: 60px 0; }
-            
-            .nav-links {
-                display: none;
-                position: fixed;
-                top: 48px;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: var(--white);
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                gap: 32px;
-                z-index: 999;
-            }
-            
-            .nav-links.open { display: flex; }
-            
-            .menu-toggle { display: block; }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .feature-showcase {
-                grid-template-columns: 1fr;
-                gap: 60px;
-                text-align: center;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        @media (max-width: 430px) {
-            .container, .container-wide { padding: 0 16px; }
-            .nav-content { padding: 0 16px; }
-            
-            .product-visual,
-            .feature-visual {
-                height: 250px;
-                margin: 40px auto;
-            }
-            
-            .client-card { padding: 32px 24px; }
-            .resource-content { padding: 24px; }
-        }
-
-        /* Animations */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-
-        /* Fallback: if GSAP fails, show everything */
-        .no-js .fade-in,
-        .gsap-failed .fade-in {
-            opacity: 1 !important;
-            transform: none !important;
-        }
-
-        .parallax-element {
-            will-change: transform;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BitGo — The Infrastructure for Digital Assets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#1d1d1f;
+  --dark:#000;
+  --white:#fff;
+  --gray-50:#fafafa;
+  --gray-100:#f5f5f7;
+  --gray-400:#86868b;
+  --gray-500:#6e6e73;
+  --gray-600:#424245;
+  --blue:#0071e3;
+  --blue-hover:#0077ed;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;color:var(--black);background:var(--white);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:52px;display:flex;align-items:center;justify-content:space-between;background:rgba(251,251,253,0.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,0.08);transition:background 0.3s}
+nav.dark{background:rgba(29,29,31,0.8);border-bottom:1px solid rgba(255,255,255,0.08)}
+nav.dark .nav-logo,nav.dark .nav-links a{color:var(--white)}
+nav.dark .hamburger span{background:var(--white)}
+.nav-logo{font-size:18px;font-weight:700;color:var(--black);text-decoration:none;letter-spacing:-0.3px}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:12px;color:var(--black);text-decoration:none;opacity:0.8;transition:opacity 0.2s}
+.nav-links a:hover{opacity:1}
+.hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px}
+.hamburger span{display:block;width:18px;height:1.5px;background:var(--black);border-radius:2px;transition:0.3s}
+
+/* MOBILE NAV OVERLAY */
+.mobile-nav{position:fixed;inset:0;z-index:99;background:var(--white);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.mobile-nav.open{opacity:1;pointer-events:all}
+.mobile-nav a{font-size:28px;font-weight:600;color:var(--black);text-decoration:none}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--dark);color:var(--white);padding:120px 24px 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;background:radial-gradient(circle,rgba(0,113,227,0.08) 0%,transparent 70%);transform:translate(-50%,-50%);pointer-events:none}
+.hero-badge{font-size:14px;font-weight:500;color:var(--gray-400);margin-bottom:24px;letter-spacing:0.5px;animation:fadeUp 0.8s ease both;animation-delay:0.1s}
+.hero h1{font-size:clamp(40px,8vw,80px);font-weight:700;letter-spacing:-2px;line-height:1.05;margin-bottom:20px;animation:fadeUp 0.8s ease both;animation-delay:0.25s}
+.hero-sub{font-size:clamp(17px,2.5vw,21px);font-weight:400;color:var(--gray-400);max-width:480px;line-height:1.5;animation:fadeUp 0.8s ease both;animation-delay:0.4s}
+.hero-cta{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;animation:fadeUp 0.8s ease both;animation-delay:0.55s}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 24px;border-radius:980px;font-size:14px;font-weight:500;text-decoration:none;transition:all 0.2s;cursor:pointer;border:none}
+.btn-blue{background:var(--blue);color:var(--white)}
+.btn-blue:hover{background:var(--blue-hover)}
+.btn-ghost{background:transparent;color:var(--blue);border:none}
+.btn-ghost:hover{text-decoration:underline}
+
+/* STATS */
+.stats{padding:80px 24px;background:var(--gray-100)}
+.stats-grid{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:center}
+.stat-value{font-family:'JetBrains Mono',monospace;font-size:clamp(36px,6vw,56px);font-weight:700;color:var(--black);letter-spacing:-2px;line-height:1}
+.stat-label{font-size:14px;color:var(--gray-500);margin-top:8px;font-weight:500}
+
+/* SECTION BASE */
+.section{padding:120px 24px}
+.section-dark{background:var(--dark);color:var(--white)}
+.section-light{background:var(--white);color:var(--black)}
+.section-gray{background:var(--gray-100);color:var(--black)}
+.container{max-width:1080px;margin:0 auto}
+.section-label{font-size:14px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px}
+.section-dark .section-label{color:var(--gray-400)}
+.section-title{font-size:clamp(32px,5vw,48px);font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:60px}
+
+/* PRODUCTS GRID */
+.products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px}
+.product-card{background:rgba(255,255,255,0.04);padding:48px 40px;transition:background 0.3s}
+.product-card:hover{background:rgba(255,255,255,0.07)}
+.product-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gray-500);margin-bottom:20px}
+.product-name{font-size:24px;font-weight:700;margin-bottom:12px;letter-spacing:-0.5px}
+.product-desc{font-size:15px;color:var(--gray-400);line-height:1.6;max-width:380px}
+.product-card:last-child{grid-column:1/-1;max-width:50%}
+
+/* PHILOSOPHY */
+.philosophy-list{display:flex;flex-direction:column;gap:0;border-top:1px solid rgba(0,0,0,0.1)}
+.philosophy-item{display:flex;gap:32px;align-items:baseline;padding:32px 0;border-bottom:1px solid rgba(0,0,0,0.1)}
+.philosophy-num{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--gray-500);flex-shrink:0;width:32px}
+.philosophy-name{font-size:20px;font-weight:600;letter-spacing:-0.3px;flex:1}
+.philosophy-desc{font-size:15px;color:var(--gray-500);line-height:1.5;flex:2}
+
+/* FEATURES */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.feature-card{background:rgba(255,255,255,0.04);padding:48px 36px;text-align:center}
+.feature-card:hover{background:rgba(255,255,255,0.07)}
+.feature-icon{font-size:40px;margin-bottom:24px}
+.feature-name{font-size:22px;font-weight:700;margin-bottom:12px;letter-spacing:-0.3px}
+.feature-desc{font-size:15px;color:var(--gray-400);line-height:1.6}
+
+/* CLIENTS */
+.clients-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.client-card{background:var(--white);border-radius:16px;padding:36px;border:1px solid rgba(0,0,0,0.08)}
+.client-quote{font-size:16px;line-height:1.6;color:var(--black);margin-bottom:24px;font-weight:400}
+.client-meta{display:flex;align-items:center;gap:12px}
+.client-avatar{width:40px;height:40px;border-radius:50%;background:var(--gray-100);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--gray-500)}
+.client-name{font-size:14px;font-weight:600}
+.client-role{font-size:13px;color:var(--gray-500)}
+
+/* RESOURCES */
+.resources-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.resource-card{background:rgba(255,255,255,0.04);border-radius:16px;overflow:hidden;transition:background 0.3s;text-decoration:none;color:inherit}
+.resource-card:hover{background:rgba(255,255,255,0.07)}
+.resource-img{height:180px;background:linear-gradient(135deg,rgba(0,113,227,0.15),rgba(0,113,227,0.05));display:flex;align-items:center;justify-content:center;font-size:42px}
+.resource-body{padding:28px}
+.resource-tag{font-size:12px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.resource-title{font-size:18px;font-weight:700;margin-bottom:8px;letter-spacing:-0.3px;color:var(--white)}
+.resource-excerpt{font-size:14px;color:var(--gray-400);line-height:1.6}
+
+/* CTA */
+.cta{padding:120px 24px;background:var(--dark);text-align:center;color:var(--white)}
+.cta h2{font-size:clamp(32px,5vw,48px);font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px}
+.cta p{font-size:17px;color:var(--gray-400);margin-bottom:36px}
+
+/* FOOTER */
+footer{background:var(--dark);color:var(--gray-400);padding:64px 24px 32px;border-top:1px solid rgba(255,255,255,0.06)}
+.footer-grid{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:2fr repeat(3,1fr);gap:48px;margin-bottom:48px}
+.footer-brand{font-size:14px;line-height:1.7}
+.footer-brand h3{font-size:18px;font-weight:700;color:var(--white);margin-bottom:12px}
+.footer-col h4{font-size:12px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}
+.footer-col a{display:block;font-size:13px;color:var(--gray-400);text-decoration:none;margin-bottom:10px;transition:color 0.2s}
+.footer-col a:hover{color:var(--white)}
+.footer-bottom{max-width:1080px;margin:0 auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;font-size:12px}
+.footer-bottom a{color:var(--blue);text-decoration:none}
+
+/* ANIMATIONS */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .stats-grid{grid-template-columns:1fr;gap:32px}
+  .products-grid{grid-template-columns:1fr}
+  .product-card:last-child{max-width:100%;grid-column:auto}
+  .product-card{padding:32px 24px}
+  .philosophy-item{flex-direction:column;gap:8px}
+  .philosophy-desc{max-width:100%}
+  .features-grid{grid-template-columns:1fr}
+  .clients-grid{grid-template-columns:1fr}
+  .resources-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .footer-bottom{flex-direction:column;gap:8px}
+  .section{padding:80px 20px}
+}
+</style>
 </head>
-<body class="no-js">
-<script>document.body.classList.remove('no-js');if(!window.gsap)setTimeout(()=>{if(!window.gsap)document.body.classList.add('gsap-failed')},3000);</script>
-    <nav id="navbar">
-        <div class="nav-content">
-            <a href="#" class="logo">BitGo</a>
-            <div class="nav-links" id="navLinks">
-                <a href="#products">Products</a>
-                <a href="#features">Features</a>
-                <a href="#philosophy">Philosophy</a>
-                <a href="#clients">Clients</a>
-                <a href="#resources">Resources</a>
-            </div>
-            <button class="menu-toggle" id="menuToggle">
-                <div class="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-            </button>
+<body>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">BitGo</a>
+  <div class="nav-links">
+    <a href="#products">Products</a>
+    <a href="#features">Features</a>
+    <a href="#philosophy">Philosophy</a>
+    <a href="#clients">Clients</a>
+    <a href="#resources">Resources</a>
+  </div>
+  <button class="hamburger" id="menuBtn" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#products" onclick="closeMenu()">Products</a>
+  <a href="#features" onclick="closeMenu()">Features</a>
+  <a href="#philosophy" onclick="closeMenu()">Philosophy</a>
+  <a href="#clients" onclick="closeMenu()">Clients</a>
+  <a href="#resources" onclick="closeMenu()">Resources</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Trusted by institutions worldwide</div>
+  <h1>The Infrastructure<br>for Digital Assets</h1>
+  <p class="hero-sub">Secure, operate, and build on digital assets since 2013.</p>
+  <div class="hero-cta">
+    <a href="#" class="btn btn-blue">Get Started</a>
+    <a href="#" class="btn btn-ghost">Talk to Sales →</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid">
+    <div class="reveal">
+      <div class="stat-value">$104B</div>
+      <div class="stat-label">Assets on Platform</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-value">9.3M+</div>
+      <div class="stat-label">Wallets Created</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-value">#1</div>
+      <div class="stat-label">Custodian & Staking Provider</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="section section-dark" id="products">
+  <div class="container">
+    <div class="section-label reveal">Products</div>
+    <h2 class="section-title reveal" style="color:var(--white)">Everything you need to<br>build on digital assets</h2>
+    <div class="products-grid">
+      <div class="product-card reveal">
+        <div class="product-num">01</div>
+        <div class="product-name">Prime Services</div>
+        <div class="product-desc">Trading, financing, collateral management, and settlement — unified in one institutional-grade platform.</div>
+      </div>
+      <div class="product-card reveal">
+        <div class="product-num">02</div>
+        <div class="product-name">Ecosystem</div>
+        <div class="product-desc">Integrate with leading exchanges and liquidity providers. Manage assets across hundreds of chains.</div>
+      </div>
+      <div class="product-card reveal">
+        <div class="product-num">03</div>
+        <div class="product-name">Stablecoins</div>
+        <div class="product-desc">Enterprise wallet infrastructure and issuance tools for the next generation of digital dollars.</div>
+      </div>
+      <div class="product-card reveal">
+        <div class="product-num">04</div>
+        <div class="product-name">Wallet Services</div>
+        <div class="product-desc">Institutional-grade multi-signature wallets with advanced policy controls and key management.</div>
+      </div>
+      <div class="product-card reveal">
+        <div class="product-num">05</div>
+        <div class="product-name">Crypto-as-a-Service</div>
+        <div class="product-desc">Embed wallets, trading, and on/off ramps into your product in weeks with our plug-and-play APIs.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="section section-light" id="philosophy">
+  <div class="container">
+    <div class="section-label reveal">What We Believe</div>
+    <h2 class="section-title reveal">Five principles that guide<br>everything we build</h2>
+    <div class="philosophy-list">
+      <div class="philosophy-item reveal">
+        <div class="philosophy-num">01</div>
+        <div class="philosophy-name">Transparency by Design</div>
+        <div class="philosophy-desc">On-chain activity enables real-time auditability, risk visibility, and trustless verification.</div>
+      </div>
+      <div class="philosophy-item reveal">
+        <div class="philosophy-num">02</div>
+        <div class="philosophy-name">Monetary Freedom</div>
+        <div class="philosophy-desc">Reducing dependence on legacy financial intermediaries, empowering users and institutions alike.</div>
+      </div>
+      <div class="philosophy-item reveal">
+        <div class="philosophy-num">03</div>
+        <div class="philosophy-name">Borderless and Always-On</div>
+        <div class="philosophy-desc">24/7 markets and programmable money unlock instant settlement and global access.</div>
+      </div>
+      <div class="philosophy-item reveal">
+        <div class="philosophy-num">04</div>
+        <div class="philosophy-name">Secure and Scarce</div>
+        <div class="philosophy-desc">Digitally-native assets secured by cryptography with predictable, transparent supply rules.</div>
+      </div>
+      <div class="philosophy-item reveal">
+        <div class="philosophy-num">05</div>
+        <div class="philosophy-name">Infrastructure for Innovation</div>
+        <div class="philosophy-desc">From tokenized real-world assets to institutional staking — building blocks of the new financial stack.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section section-dark" id="features">
+  <div class="container">
+    <div class="section-label reveal">Features</div>
+    <h2 class="section-title reveal" style="color:var(--white)">Built for the way<br>institutions operate</h2>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🏦</div>
+        <div class="feature-name">Go Accounts</div>
+        <div class="feature-desc">Cash and crypto in one place. Hold, send, trade, and finance with full regulatory compliance.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📈</div>
+        <div class="feature-name">Staking</div>
+        <div class="feature-desc">One-click staking to maximize rewards with secure, non-custodial infrastructure and flexible terms.</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-name">Settlement</div>
+        <div class="feature-desc">Instant off-chain settlement between counterparties. Reduce risk. Unlock capital efficiency.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS -->
+<section class="section section-gray" id="clients">
+  <div class="container">
+    <div class="section-label reveal">Client Spotlight</div>
+    <h2 class="section-title reveal">Trusted by industry leaders</h2>
+    <div class="clients-grid">
+      <div class="client-card reveal">
+        <p class="client-quote">"BitGo's infrastructure allowed us to scale our custody operations globally while maintaining the highest security standards."</p>
+        <div class="client-meta">
+          <div class="client-avatar">JM</div>
+          <div>
+            <div class="client-name">James Mitchell</div>
+            <div class="client-role">CTO, Global Exchange</div>
+          </div>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="section hero">
-        <div class="container text-center">
-            <div class="hero-content">
-                <div class="hero-badge fade-in">Trusted by institutions worldwide</div>
-                <h1 class="display-large fade-in">The Infrastructure<br>for Digital Assets</h1>
-                <p class="body-large hero-subtitle fade-in">Secure, operate, and build on digital assets since 2013.</p>
-            </div>
+      </div>
+      <div class="client-card reveal">
+        <p class="client-quote">"The Go Network has transformed how we handle settlement — what used to take days now happens in seconds."</p>
+        <div class="client-meta">
+          <div class="client-avatar">SK</div>
+          <div>
+            <div class="client-name">Sarah Kim</div>
+            <div class="client-role">Head of Ops, FinTech Corp</div>
+          </div>
         </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="section stats">
-        <div class="container">
-            <div class="stats-grid">
-                <div class="stat fade-in">
-                    <div class="stat-value">$104B</div>
-                    <div class="stat-label">Assets on Platform</div>
-                </div>
-                <div class="stat fade-in">
-                    <div class="stat-value">9.3M+</div>
-                    <div class="stat-label">Wallets Created</div>
-                </div>
-                <div class="stat fade-in">
-                    <div class="stat-value">#1</div>
-                    <div class="stat-label">Custodian</div>
-                </div>
-            </div>
+      </div>
+      <div class="client-card reveal">
+        <p class="client-quote">"Their APIs let us embed digital assets into our platform in weeks, not months. Exceptional developer experience."</p>
+        <div class="client-meta">
+          <div class="client-avatar">RL</div>
+          <div>
+            <div class="client-name">Raj Lakshmi</div>
+            <div class="client-role">VP Engineering, NeoBank</div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Products Section -->
-    <section class="products" id="products">
-        <div class="products-sticky">
-            <div class="container">
-                <div class="product-showcase text-center">
-                    <div class="product-counter">01 / 05</div>
-                    <h2 class="headline product-title">Prime Services</h2>
-                    <p class="body-large product-description">Institutional trading, financing, collateral management, and settlement — all from a single, unified platform.</p>
-                    <div class="product-visual">⚡</div>
-                </div>
-            </div>
+<!-- RESOURCES -->
+<section class="section section-dark" id="resources">
+  <div class="container">
+    <div class="section-label reveal">Resources</div>
+    <h2 class="section-title reveal" style="color:var(--white)">Insights from our team</h2>
+    <div class="resources-grid">
+      <a href="#" class="resource-card reveal">
+        <div class="resource-img">📊</div>
+        <div class="resource-body">
+          <div class="resource-tag">Research</div>
+          <div class="resource-title">The Future of Institutional Custody</div>
+          <div class="resource-excerpt">How institutions are adapting custody strategies for a fragmented blockchain landscape.</div>
         </div>
-    </section>
-
-    <!-- Philosophy Section -->
-    <section class="section philosophy" id="philosophy">
-        <div class="container">
-            <div class="philosophy-intro">
-                <h2 class="headline fade-in">What We Believe</h2>
-                <p class="body-large fade-in" style="color: var(--gray-light); margin-top: 24px;">Five principles that guide everything we build</p>
-            </div>
-            <div class="philosophy-grid">
-                <div class="philosophy-item fade-in">
-                    <div class="philosophy-number">01</div>
-                    <h3 class="title philosophy-title">Transparency by Design</h3>
-                    <p class="philosophy-description">Open, auditable, and verifiable at every layer of the stack.</p>
-                </div>
-                <div class="philosophy-item fade-in">
-                    <div class="philosophy-number">02</div>
-                    <h3 class="title philosophy-title">Monetary Freedom</h3>
-                    <p class="philosophy-description">Everyone deserves access to the global financial system.</p>
-                </div>
-                <div class="philosophy-item fade-in">
-                    <div class="philosophy-number">03</div>
-                    <h3 class="title philosophy-title">Borderless and Always-On</h3>
-                    <p class="philosophy-description">Finance that works 24/7, across every border on earth.</p>
-                </div>
-                <div class="philosophy-item fade-in">
-                    <div class="philosophy-number">04</div>
-                    <h3 class="title philosophy-title">Secure and Scarce</h3>
-                    <p class="philosophy-description">Sound money principles embedded in every product we ship.</p>
-                </div>
-                <div class="philosophy-item fade-in">
-                    <div class="philosophy-number">05</div>
-                    <h3 class="title philosophy-title">Infrastructure for Innovation</h3>
-                    <p class="philosophy-description">Building the rails the next generation of finance runs on.</p>
-                </div>
-            </div>
+      </a>
+      <a href="#" class="resource-card reveal">
+        <div class="resource-img">🚀</div>
+        <div class="resource-body">
+          <div class="resource-tag">Product</div>
+          <div class="resource-title">Go Network 2.0: Instant Settlement</div>
+          <div class="resource-excerpt">Atomic swaps and real-time finality for institutional trading.</div>
         </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="features-sticky">
-            <div class="container-wide">
-                <div class="feature-showcase">
-                    <div class="feature-content">
-                        <div class="feature-number">01 / 03</div>
-                        <h2 class="headline feature-title">Go Accounts</h2>
-                        <p class="body-large feature-description">Fully qualified custodial accounts with regulatory compliance, reporting, and institutional governance built in.</p>
-                    </div>
-                    <div class="feature-visual">🏦</div>
-                </div>
-            </div>
+      </a>
+      <a href="#" class="resource-card reveal">
+        <div class="resource-img">🛠️</div>
+        <div class="resource-body">
+          <div class="resource-tag">Guide</div>
+          <div class="resource-title">Developer's Guide to Crypto-as-a-Service</div>
+          <div class="resource-excerpt">Everything you need to embed regulated digital asset services into your platform.</div>
         </div>
-    </section>
-
-    <!-- Clients Section -->
-    <section class="section clients" id="clients">
-        <div class="container">
-            <div class="clients-intro">
-                <h2 class="headline fade-in">Trusted by Industry Leaders</h2>
-                <p class="body-large fade-in" style="color: var(--gray-light); margin-top: 24px;">See how institutions worldwide build on BitGo</p>
-            </div>
-            <div class="swiper" id="clientsSwiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="client-card">
-                            <p class="client-quote">"BitGo's infrastructure allowed us to scale our custody operations globally while maintaining the highest security standards."</p>
-                            <div class="client-author">
-                                <div class="client-avatar">JM</div>
-                                <div>
-                                    <div class="client-name">James Mitchell</div>
-                                    <div class="client-role">CTO, Global Exchange</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="client-card">
-                            <p class="client-quote">"The Go Network has transformed how we handle settlement — what took days now takes seconds."</p>
-                            <div class="client-author">
-                                <div class="client-avatar">SK</div>
-                                <div>
-                                    <div class="client-name">Sarah Kim</div>
-                                    <div class="client-role">Head of Operations, FinTech Corp</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="client-card">
-                            <p class="client-quote">"Their APIs let us embed digital assets into our platform in weeks, not months. Exceptional developer experience."</p>
-                            <div class="client-author">
-                                <div class="client-avatar">RL</div>
-                                <div>
-                                    <div class="client-name">Raj Lakshmi</div>
-                                    <div class="client-role">VP Engineering, NeoBank</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
+      </a>
+      <a href="#" class="resource-card reveal">
+        <div class="resource-img">📈</div>
+        <div class="resource-body">
+          <div class="resource-tag">Analysis</div>
+          <div class="resource-title">Digital Asset Adoption Trends in 2026</div>
+          <div class="resource-excerpt">A comprehensive look at institutional integration of digital assets.</div>
         </div>
-    </section>
+      </a>
+    </div>
+  </div>
+</section>
 
-    <!-- Resources Section -->
-    <section class="section resources" id="resources">
-        <div class="container">
-            <div class="resources-intro">
-                <h2 class="headline fade-in">Resources</h2>
-                <p class="body-large fade-in" style="color: rgba(255, 255, 255, 0.7); margin-top: 24px;">Insights and research from our team</p>
-            </div>
-            <div class="resources-grid">
-                <article class="resource-card fade-in">
-                    <div class="resource-image">
-                        <span class="resource-tag">Research</span>
-                        <div style="font-size: 48px;">📊</div>
-                    </div>
-                    <div class="resource-content">
-                        <h3 class="resource-title">The Future of Institutional Custody</h3>
-                        <p class="resource-excerpt">How institutions are adapting their custody strategies for an increasingly fragmented blockchain landscape.</p>
-                        <a href="#" class="resource-link">Read more →</a>
-                    </div>
-                </article>
-                <article class="resource-card fade-in">
-                    <div class="resource-image">
-                        <span class="resource-tag">Product</span>
-                        <div style="font-size: 48px;">🚀</div>
-                    </div>
-                    <div class="resource-content">
-                        <h3 class="resource-title">Go Network 2.0: Instant Settlement</h3>
-                        <p class="resource-excerpt">Our next-generation settlement layer brings atomic swaps and real-time finality to institutional trading.</p>
-                        <a href="#" class="resource-link">Read more →</a>
-                    </div>
-                </article>
-                <article class="resource-card fade-in">
-                    <div class="resource-image">
-                        <span class="resource-tag">Guide</span>
-                        <div style="font-size: 48px;">🛠️</div>
-                    </div>
-                    <div class="resource-content">
-                        <h3 class="resource-title">Developer's Guide to Crypto-as-a-Service</h3>
-                        <p class="resource-excerpt">Everything you need to know about embedding regulated digital asset services into your platform.</p>
-                        <a href="#" class="resource-link">Read more →</a>
-                    </div>
-                </article>
-                <article class="resource-card fade-in">
-                    <div class="resource-image">
-                        <span class="resource-tag">Analysis</span>
-                        <div style="font-size: 48px;">📈</div>
-                    </div>
-                    <div class="resource-content">
-                        <h3 class="resource-title">Digital Asset Adoption Trends in 2026</h3>
-                        <p class="resource-excerpt">A comprehensive look at how institutions are integrating digital assets into their portfolios.</p>
-                        <a href="#" class="resource-link">Read more →</a>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
+<!-- CTA -->
+<section class="cta">
+  <h2 class="reveal">Ready to build the future<br>of digital finance?</h2>
+  <p class="reveal">Join 1,500+ institutions building on the most trusted digital asset infrastructure.</p>
+  <div class="reveal">
+    <a href="#" class="btn btn-blue">Get Started Today</a>
+  </div>
+</section>
 
-    <!-- CTA Section -->
-    <section class="section cta">
-        <div class="container text-center">
-            <h2 class="headline fade-in">Ready to build the future<br>of digital finance?</h2>
-            <p class="body-large cta-subtitle fade-in">Join 1,500+ institutions building on the most trusted digital asset infrastructure.</p>
-            <div class="cta-buttons">
-                <a href="#" class="btn btn-primary">Get Started Today</a>
-                <a href="#" class="btn btn-secondary">Talk to Sales</a>
-            </div>
-        </div>
-    </section>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>BitGo</h3>
+      <p>The digital asset infrastructure company. Securing, operating, and building the future of finance since 2013.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Products</h4>
+      <a href="#">Prime Services</a>
+      <a href="#">Wallet Services</a>
+      <a href="#">Stablecoins</a>
+      <a href="#">Crypto-as-a-Service</a>
+      <a href="#">Go Network</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+      <a href="#">Blog</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <a href="#">Documentation</a>
+      <a href="#">API Reference</a>
+      <a href="#">Status</a>
+      <a href="#">Security</a>
+      <a href="#">Legal</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 BitGo. All rights reserved.</span>
+    <span>Redesigned by <a href="#">Andy Garney</a></span>
+  </div>
+</footer>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <h3>BitGo</h3>
-                    <p>The digital asset infrastructure company. Securing, operating, and building the future of finance.</p>
-                </div>
-                <div class="footer-column">
-                    <h4>Products</h4>
-                    <a href="#">Prime Services</a>
-                    <a href="#">Wallet Services</a>
-                    <a href="#">Stablecoins</a>
-                    <a href="#">Crypto-as-a-Service</a>
-                    <a href="#">Go Network</a>
-                </div>
-                <div class="footer-column">
-                    <h4>Company</h4>
-                    <a href="#">About</a>
-                    <a href="#">Careers</a>
-                    <a href="#">Press</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="footer-column">
-                    <h4>Resources</h4>
-                    <a href="#">Documentation</a>
-                    <a href="#">API Reference</a>
-                    <a href="#">Status</a>
-                    <a href="#">Security</a>
-                    <a href="#">Legal</a>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 BitGo. All rights reserved.</p>
-                <p class="footer-credit">Redesigned by <a href="#">Andy Garney</a></p>
-            </div>
-        </div>
-    </footer>
+<script>
+// Mobile menu
+const menuBtn=document.getElementById('menuBtn');
+const mobileNav=document.getElementById('mobileNav');
+function closeMenu(){mobileNav.classList.remove('open')}
+menuBtn.addEventListener('click',()=>mobileNav.classList.toggle('open'));
 
-    <script>
-        // Initialize GSAP and plugins
-        gsap.registerPlugin(ScrollTrigger);
+// Nav dark/light based on section behind it
+const nav=document.getElementById('nav');
+const darkSections=document.querySelectorAll('.hero,.section-dark,.cta');
+const navObs=new IntersectionObserver(entries=>{
+  // Check if any dark section is at the top
+  let anyDark=false;
+  entries.forEach(e=>{
+    if(e.isIntersecting&&e.boundingClientRect.top<60)anyDark=true;
+  });
+  // Recheck all dark sections
+  darkSections.forEach(s=>{
+    const r=s.getBoundingClientRect();
+    if(r.top<52&&r.bottom>52)anyDark=true;
+  });
+  nav.classList.toggle('dark',anyDark);
+},{threshold:[0,0.1,0.5,1],rootMargin:'-1px 0px -95% 0px'});
+darkSections.forEach(s=>navObs.observe(s));
+// Also do it on scroll for reliability
+window.addEventListener('scroll',()=>{
+  let dark=false;
+  darkSections.forEach(s=>{
+    const r=s.getBoundingClientRect();
+    if(r.top<52&&r.bottom>52)dark=true;
+  });
+  nav.classList.toggle('dark',dark);
+},{passive:true});
 
-        // Smooth scrolling with Lenis
-        const lenis = new Lenis({
-            duration: 1.8,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-
-        // Navigation color change
-        const sections = document.querySelectorAll('.section');
-        const navbar = document.getElementById('navbar');
-
-        ScrollTrigger.batch(sections, {
-            onEnter: (elements) => {
-                const section = elements[0];
-                if (section.classList.contains('section-dark')) {
-                    navbar.classList.add('dark');
-                } else {
-                    navbar.classList.remove('dark');
-                }
-            },
-            onLeave: (elements) => {
-                const section = elements[0];
-                if (section.classList.contains('section-dark')) {
-                    navbar.classList.remove('dark');
-                } else {
-                    navbar.classList.add('dark');
-                }
-            },
-            onEnterBack: (elements) => {
-                const section = elements[0];
-                if (section.classList.contains('section-dark')) {
-                    navbar.classList.add('dark');
-                } else {
-                    navbar.classList.remove('dark');
-                }
-            }
-        });
-
-        // Mobile menu
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('open');
-        });
-
-        // Hero fade-ins: animate immediately on load
-        gsap.utils.toArray('.hero .fade-in').forEach((element, i) => {
-            gsap.fromTo(element, {
-                opacity: 0,
-                y: 40
-            }, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                delay: 0.2 + i * 0.15,
-                ease: "power2.out"
-            });
-        });
-
-        // All other fade-ins: animate on scroll
-        gsap.utils.toArray('.fade-in:not(.hero .fade-in)').forEach((element) => {
-            gsap.fromTo(element, {
-                opacity: 0,
-                y: 60
-            }, {
-                opacity: 1,
-                y: 0,
-                duration: 1.2,
-                ease: "power2.out",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        });
-
-        // Products sticky scroll
-        const productsData = [
-            {
-                title: "Prime Services",
-                description: "Institutional trading, financing, collateral management, and settlement — all from a single, unified platform.",
-                icon: "⚡"
-            },
-            {
-                title: "Ecosystem",
-                description: "Seamlessly integrate with exchanges, manage assets across chains, and connect to the broader digital asset ecosystem.",
-                icon: "🌐"
-            },
-            {
-                title: "Stablecoins",
-                description: "Enterprise wallet infrastructure and stablecoin issuance tools purpose-built for the next generation of digital dollars.",
-                icon: "🪙"
-            },
-            {
-                title: "Wallet Services",
-                description: "Institutional-grade, multi-signature wallet infrastructure with advanced policy controls and key management.",
-                icon: "🔐"
-            },
-            {
-                title: "Crypto-as-a-Service",
-                description: "Embed wallets, trading, and on/off ramps directly into your product with our developer-friendly API platform.",
-                icon: "🧩"
-            }
-        ];
-
-        let currentProduct = 0;
-        const productTitle = document.querySelector('.product-title');
-        const productDescription = document.querySelector('.product-description');
-        const productVisual = document.querySelector('.product-visual');
-        const productCounter = document.querySelector('.product-counter');
-
-        ScrollTrigger.create({
-            trigger: ".products",
-            start: "top top",
-            end: "bottom top",
-            pin: ".products-sticky",
-            onUpdate: (self) => {
-                const progress = self.progress;
-                const newProduct = Math.floor(progress * productsData.length);
-                
-                if (newProduct !== currentProduct && newProduct < productsData.length) {
-                    currentProduct = newProduct;
-                    const product = productsData[currentProduct];
-                    
-                    // Update content with smooth animation
-                    gsap.to([productTitle, productDescription, productVisual, productCounter], {
-                        opacity: 0,
-                        y: 20,
-                        duration: 0.3,
-                        onComplete: () => {
-                            productTitle.textContent = product.title;
-                            productDescription.textContent = product.description;
-                            productVisual.textContent = product.icon;
-                            productCounter.textContent = `0${currentProduct + 1} / 05`;
-                            
-                            gsap.to([productTitle, productDescription, productVisual, productCounter], {
-                                opacity: 1,
-                                y: 0,
-                                duration: 0.6,
-                                stagger: 0.1,
-                                ease: "power2.out"
-                            });
-                        }
-                    });
-                }
-            }
-        });
-
-        // Features sticky scroll
-        const featuresData = [
-            {
-                title: "Go Accounts",
-                description: "Fully qualified custodial accounts with regulatory compliance, reporting, and institutional governance built in.",
-                icon: "🏦"
-            },
-            {
-                title: "Staking",
-                description: "Earn yield on digital assets through secure, non-custodial staking with full transparency and flexible terms.",
-                icon: "📈"
-            },
-            {
-                title: "Settlement",
-                description: "Instant, off-chain settlement between counterparties — reducing risk and unlocking capital efficiency.",
-                icon: "🔄"
-            }
-        ];
-
-        let currentFeature = 0;
-        const featureTitle = document.querySelector('.feature-title');
-        const featureDescription = document.querySelector('.feature-description');
-        const featureVisual = document.querySelector('.feature-visual');
-        const featureNumber = document.querySelector('.feature-number');
-
-        ScrollTrigger.create({
-            trigger: ".features",
-            start: "top top",
-            end: "bottom top",
-            pin: ".features-sticky",
-            onUpdate: (self) => {
-                const progress = self.progress;
-                const newFeature = Math.floor(progress * featuresData.length);
-                
-                if (newFeature !== currentFeature && newFeature < featuresData.length) {
-                    currentFeature = newFeature;
-                    const feature = featuresData[currentFeature];
-                    
-                    // Update content with smooth animation
-                    gsap.to([featureTitle, featureDescription, featureVisual, featureNumber], {
-                        opacity: 0,
-                        x: -30,
-                        duration: 0.3,
-                        onComplete: () => {
-                            featureTitle.textContent = feature.title;
-                            featureDescription.textContent = feature.description;
-                            featureVisual.textContent = feature.icon;
-                            featureNumber.textContent = `0${currentFeature + 1} / 03`;
-                            
-                            gsap.to([featureTitle, featureDescription, featureVisual, featureNumber], {
-                                opacity: 1,
-                                x: 0,
-                                duration: 0.6,
-                                stagger: 0.1,
-                                ease: "power2.out"
-                            });
-                        }
-                    });
-                }
-            }
-        });
-
-        // Clients Swiper
-        const clientsSwiper = new Swiper('#clientsSwiper', {
-            slidesPerView: 1,
-            spaceBetween: 32,
-            loop: true,
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            breakpoints: {
-                768: {
-                    slidesPerView: 2,
-                },
-                1024: {
-                    slidesPerView: 3,
-                }
-            }
-        });
-
-        // Parallax effects
-        gsap.utils.toArray('.parallax-element').forEach(element => {
-            gsap.fromTo(element, {
-                y: -50
-            }, {
-                y: 50,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: element,
-                    start: "top bottom",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
-        });
-
-        // Update ScrollTrigger on window resize
-        window.addEventListener('resize', () => {
-            ScrollTrigger.refresh();
-        });
-    </script>
+// Scroll reveal
+const reveals=document.querySelectorAll('.reveal');
+const revealObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      revealObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.15,rootMargin:'0px 0px -40px 0px'});
+reveals.forEach(el=>revealObs.observe(el));
+</script>
 </body>
 </html>
