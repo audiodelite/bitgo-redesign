@@ -1,543 +1,1550 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BitGo — Digital Asset Infrastructure</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
---bg:#0a0e1a;--bg2:#0f1424;--bg3:#141a2e;
---cyan:#00d4ff;--blue:#3b82f6;--purple:#8b5cf6;
---grad:linear-gradient(135deg,#00d4ff,#3b82f6,#8b5cf6);
---glass:rgba(255,255,255,.04);--glass-border:rgba(255,255,255,.08);
---text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
---radius:16px;--radius-sm:10px;
-}
-html{scroll-behavior:smooth;font-size:16px}
-body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-button{font-family:inherit;cursor:pointer;border:none;background:none}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitGo — The Infrastructure for Digital Assets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.26/dist/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type@0.3.3/dist/index.umd.js"></script>
+    <script src="https://unpkg.com/swiper@10/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper@10/swiper-bundle.min.css">
 
-/* Utility */
-.container{max-width:1200px;margin:0 auto;padding:0 24px}
-.section{padding:120px 0}
-.section-label{font-size:.75rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
-.section-title{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.15;margin-bottom:16px;background:linear-gradient(135deg,#fff 40%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.section-sub{color:var(--text2);font-size:1.1rem;max-width:560px;line-height:1.7}
+    <style>
+        :root {
+            --black: #09090b;
+            --gray-950: #0a0a0a; 
+            --gray-900: #111113;
+            --gray-800: #1c1c20;
+            --gray-700: #2a2a2d;
+            --gray-600: #3a3a3f;
+            --gray-500: #6b7280;
+            --gray-400: #9ca3af;
+            --gray-300: #d1d5db;
+            --gray-200: #e5e7eb;
+            --gray-100: #f3f4f6;
+            --white: #ffffff;
+            --blue: #0066ff;
+            --blue-light: #3b82f6;
+            --blue-dark: #1e40af;
+        }
 
-/* Reveal animation */
-.reveal{opacity:0;transform:translateY(40px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.25s}.reveal-delay-4{transition-delay:.3s}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 0;transition:all .4s}
-nav.scrolled{background:rgba(10,14,26,.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:14px 0}
-nav .container{display:flex;align-items:center;justify-content:space-between}
-.logo{font-size:1.5rem;font-weight:800;display:flex;align-items:center;gap:8px}
-.logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.logo-icon{width:32px;height:32px;border-radius:8px;background:var(--grad);display:flex;align-items:center;justify-content:center}
-.logo-icon svg{width:18px;height:18px}
-.nav-links{display:flex;gap:32px;align-items:center}
-.nav-links a{font-size:.875rem;font-weight:500;color:var(--text2);transition:color .25s}
-.nav-links a:hover{color:#fff}
-.nav-cta{padding:10px 24px;border-radius:50px;background:var(--grad);color:#fff;font-weight:600;font-size:.875rem;transition:transform .2s,box-shadow .2s}
-.nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,212,255,.3)}
-.menu-toggle{display:none;flex-direction:column;gap:5px;padding:8px}
-.menu-toggle span{width:22px;height:2px;background:#fff;border-radius:2px;transition:.3s}
+        html {
+            font-size: 16px;
+        }
 
-/* HERO */
-.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:100px}
-.hero-bg{position:absolute;inset:0;z-index:0}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.06) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000 20%,transparent 70%)}
-.hero-glow{position:absolute;width:800px;height:800px;border-radius:50%;filter:blur(120px);opacity:.25;top:-200px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,var(--cyan),var(--blue),transparent 70%);animation:glow-pulse 8s ease-in-out infinite}
-.hero-glow-2{position:absolute;width:500px;height:500px;border-radius:50%;filter:blur(100px);opacity:.12;bottom:-100px;right:-100px;background:radial-gradient(circle,var(--purple),transparent 70%);animation:glow-pulse 10s ease-in-out infinite reverse}
-@keyframes glow-pulse{0%,100%{opacity:.2;transform:translateX(-50%) scale(1)}50%{opacity:.35;transform:translateX(-50%) scale(1.1)}}
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: none;
+        }
 
-/* Particles */
-#particles{position:absolute;inset:0;z-index:1}
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--blue);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.2s ease;
+        }
 
-.hero-content{position:relative;z-index:2;text-align:center;max-width:900px;margin:0 auto}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:50px;background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(10px);font-size:.8rem;font-weight:500;color:var(--cyan);margin-bottom:32px}
-.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:dot-blink 2s infinite}
-@keyframes dot-blink{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.08;margin-bottom:24px;letter-spacing:-.03em}
-.hero h1 .line1{display:block;background:linear-gradient(135deg,#fff 0%,#cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero h1 .line2{display:block;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero p{font-size:1.2rem;color:var(--text2);max-width:540px;margin:0 auto 40px;line-height:1.7}
-.hero-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.btn-primary{padding:14px 36px;border-radius:50px;background:var(--grad);color:#fff;font-weight:600;font-size:1rem;transition:all .3s;position:relative;overflow:hidden}
-.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);opacity:0;transition:opacity .3s}
-.btn-primary:hover::before{opacity:1}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,212,255,.35)}
-.btn-outline{padding:14px 36px;border-radius:50px;border:1px solid var(--glass-border);color:#fff;font-weight:600;font-size:1rem;transition:all .3s;backdrop-filter:blur(10px);background:var(--glass)}
-.btn-outline:hover{border-color:var(--cyan);background:rgba(0,212,255,.08);transform:translateY(-2px)}
+        .cursor-dot {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--white);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+        }
 
-/* Scroll indicator */
-.scroll-indicator{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-10px)}}
-.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--cyan),transparent);border-radius:1px}
+        /* Typography */
+        .headline {
+            font-family: 'Instrument Serif', Georgia, serif;
+            font-weight: 400;
+            line-height: 0.95;
+            letter-spacing: -0.02em;
+        }
 
-/* STATS */
-.stats{padding:80px 0;position:relative}
-.stats::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent,var(--bg2),transparent)}
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;position:relative}
-.stat{text-align:center;padding:40px 24px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(10px);transition:all .4s}
-.stat:hover{border-color:rgba(0,212,255,.2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.stat-value{font-size:clamp(2rem,4vw,3.2rem);font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
-.stat-label{font-size:.9rem;color:var(--text2);font-weight:500}
+        .mono {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+        }
 
-/* PRODUCTS */
-.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:24px;margin-top:48px}
-.product-card{padding:36px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-border);backdrop-filter:blur(12px);transition:all .4s;position:relative;overflow:hidden}
-.product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);opacity:0;transition:opacity .4s}
-.product-card:hover{border-color:rgba(0,212,255,.15);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.4)}
-.product-card:hover::before{opacity:1}
-.product-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(0,212,255,.12),rgba(59,130,246,.12));display:flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:1.5rem;transition:all .4s}
-.product-card:hover .product-icon{background:linear-gradient(135deg,rgba(0,212,255,.2),rgba(59,130,246,.2));transform:scale(1.05)}
-.product-card h3{font-size:1.25rem;font-weight:700;margin-bottom:10px}
-.product-card p{color:var(--text2);line-height:1.7;font-size:.925rem}
-.product-card .card-arrow{position:absolute;bottom:32px;right:32px;width:36px;height:36px;border-radius:50%;border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;transition:all .3s;opacity:0;transform:translateX(-8px)}
-.product-card:hover .card-arrow{opacity:1;transform:translateX(0);border-color:var(--cyan);color:var(--cyan)}
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 clamp(24px, 5vw, 80px);
+        }
 
-/* PHILOSOPHY */
-.philosophy{background:var(--bg2)}
-.phil-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-top:48px}
-.phil-item{padding:32px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-border);text-align:center;transition:all .4s}
-.phil-item:hover{border-color:rgba(0,212,255,.2);transform:translateY(-4px)}
-.phil-icon{font-size:2rem;margin-bottom:16px;display:block}
-.phil-item h4{font-size:1rem;font-weight:700;margin-bottom:8px}
-.phil-item p{color:var(--text3);font-size:.825rem;line-height:1.6}
+        .container-wide {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 clamp(24px, 3vw, 40px);
+        }
 
-/* FEATURES */
-.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
-.feature-card{padding:48px 36px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-border);text-align:center;transition:all .4s;position:relative;overflow:hidden}
-.feature-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(0,212,255,.06),transparent 60%);opacity:0;transition:opacity .4s}
-.feature-card:hover{transform:translateY(-6px);border-color:rgba(0,212,255,.15)}
-.feature-card:hover::after{opacity:1}
-.feature-card .f-icon{font-size:2.5rem;margin-bottom:20px;display:block;position:relative;z-index:1}
-.feature-card h3{font-size:1.3rem;font-weight:700;margin-bottom:12px;position:relative;z-index:1}
-.feature-card p{color:var(--text2);line-height:1.7;font-size:.925rem;position:relative;z-index:1}
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 24px 0;
+            transition: background 0.3s ease, backdrop-filter 0.3s ease;
+        }
 
-/* SUPPORT */
-.support{background:var(--bg2)}
-.support-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:48px}
-.support-item{display:flex;align-items:center;gap:16px;padding:24px;border-radius:var(--radius-sm);background:var(--glass);border:1px solid var(--glass-border);transition:all .3s}
-.support-item:hover{border-color:rgba(0,212,255,.15);transform:translateX(4px)}
-.support-item .s-icon{width:42px;height:42px;min-width:42px;border-radius:10px;background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(59,130,246,.1));display:flex;align-items:center;justify-content:center;font-size:1.1rem}
-.support-item span{font-weight:600;font-size:.925rem}
+        nav.scrolled {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
 
-/* CLIENTS */
-.clients-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
-.client-card{padding:36px;border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-border);transition:all .4s}
-.client-card:hover{border-color:rgba(0,212,255,.15);transform:translateY(-4px)}
-.client-card .quote{color:var(--text2);line-height:1.8;font-size:.95rem;margin-bottom:24px;font-style:italic}
-.client-card .author{display:flex;align-items:center;gap:14px}
-.client-avatar{width:44px;height:44px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem}
-.client-info .name{font-weight:600;font-size:.9rem}
-.client-info .role{color:var(--text3);font-size:.8rem}
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-/* BLOG */
-.blog{background:var(--bg2)}
-.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
-.blog-card{border-radius:var(--radius);background:var(--glass);border:1px solid var(--glass-border);overflow:hidden;transition:all .4s}
-.blog-card:hover{border-color:rgba(0,212,255,.15);transform:translateY(-6px)}
-.blog-thumb{height:180px;background:linear-gradient(135deg,var(--bg3),var(--bg));position:relative;overflow:hidden}
-.blog-thumb::after{content:'';position:absolute;inset:0;background:var(--grad);opacity:.08}
-.blog-thumb .tag{position:absolute;top:16px;left:16px;padding:6px 14px;border-radius:50px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--cyan)}
-.blog-body{padding:28px}
-.blog-body h3{font-size:1.1rem;font-weight:700;margin-bottom:10px;line-height:1.4}
-.blog-body p{color:var(--text3);font-size:.85rem;line-height:1.6;margin-bottom:16px}
-.blog-body .read-more{color:var(--cyan);font-size:.85rem;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:gap .3s}
-.blog-card:hover .read-more{gap:10px}
+        .logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--white);
+            text-decoration: none;
+            z-index: 1001;
+        }
 
-/* CTA */
-.cta-section{padding:120px 0;text-align:center;position:relative;overflow:hidden}
-.cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(0,212,255,.08),transparent)}
-.cta-section h2{font-size:clamp(2rem,4vw,3rem);font-weight:800;margin-bottom:16px;background:linear-gradient(135deg,#fff,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.cta-section p{color:var(--text2);font-size:1.1rem;max-width:480px;margin:0 auto 36px;line-height:1.7}
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
 
-/* FOOTER */
-footer{background:var(--bg2);border-top:1px solid var(--glass-border);padding:64px 0 32px}
-.footer-top{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:48px;margin-bottom:48px}
-.footer-brand .logo{margin-bottom:16px}
-.footer-brand p{color:var(--text3);font-size:.875rem;line-height:1.7;max-width:280px}
-.footer-col h4{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:20px}
-.footer-col a{display:block;color:var(--text2);font-size:.9rem;margin-bottom:12px;transition:color .25s}
-.footer-col a:hover{color:var(--cyan)}
-.footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:32px;border-top:1px solid var(--glass-border);flex-wrap:wrap;gap:16px}
-.footer-bottom p{color:var(--text3);font-size:.8rem}
-.footer-socials{display:flex;gap:12px}
-.footer-socials a{width:36px;height:36px;border-radius:50%;border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;transition:all .3s;color:var(--text3);font-size:.85rem}
-.footer-socials a:hover{border-color:var(--cyan);color:var(--cyan);transform:translateY(-2px)}
-.credit{text-align:center;padding-top:24px;color:var(--text3);font-size:.75rem;letter-spacing:.05em}
-.credit a{color:var(--cyan);transition:opacity .3s}
-.credit a:hover{opacity:.7}
+        .nav-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
 
-/* Responsive */
-@media(max-width:900px){
-.nav-links{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,14,26,.97);backdrop-filter:blur(20px);flex-direction:column;justify-content:center;align-items:center;gap:28px;z-index:99}
-.nav-links.open{display:flex}
-.nav-links a{font-size:1.2rem}
-.menu-toggle{display:flex;z-index:101}
-.stats-grid,.features-grid,.clients-grid,.blog-grid{grid-template-columns:1fr}
-.products-grid{grid-template-columns:1fr}
-.footer-top{grid-template-columns:1fr 1fr}
-.phil-grid{grid-template-columns:repeat(2,1fr)}
-}
-@media(max-width:600px){
-.section{padding:80px 0}
-.hero-buttons{flex-direction:column;align-items:center}
-.phil-grid{grid-template-columns:1fr}
-.footer-top{grid-template-columns:1fr}
-.support-grid{grid-template-columns:1fr}
-}
-</style>
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-cta {
+            background: var(--white);
+            color: var(--black) !important;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-cta:hover {
+            background: transparent;
+            color: var(--white) !important;
+            border-color: var(--white);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            width: 20px;
+            height: 2px;
+            background: var(--white);
+            transition: 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(0, 102, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 102, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+        }
+
+        .hero-label {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gray-500);
+            margin-bottom: 40px;
+            opacity: 0;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 120px);
+            margin-bottom: 32px;
+            color: var(--white);
+            opacity: 0;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(18px, 2vw, 24px);
+            color: var(--gray-400);
+            margin-bottom: 48px;
+            max-width: 600px;
+            opacity: 0;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 64px;
+            margin-top: 80px;
+            opacity: 0;
+        }
+
+        .hero-stat {
+            text-align: left;
+        }
+
+        .hero-stat-value {
+            font-size: clamp(24px, 3vw, 36px);
+            font-weight: 700;
+            color: var(--white);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        /* Products Section */
+        .products {
+            padding: 200px 0;
+            position: relative;
+        }
+
+        .products-intro {
+            margin-bottom: 120px;
+        }
+
+        .section-number {
+            font-size: 120px;
+            font-weight: 800;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--gray-900);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            line-height: 1;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 64px);
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .section-subtitle {
+            font-size: clamp(16px, 2vw, 20px);
+            color: var(--gray-400);
+            max-width: 500px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .products-horizontal {
+            position: relative;
+            height: 100vh;
+        }
+
+        .products-container {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .products-track {
+            display: flex;
+            gap: 80px;
+            padding-left: clamp(24px, 5vw, 80px);
+        }
+
+        .product-card {
+            min-width: 400px;
+            max-width: 400px;
+            padding: 48px 40px;
+            background: var(--gray-950);
+            border-radius: 12px;
+            border: 1px solid var(--gray-900);
+            transition: border-color 0.3s ease;
+        }
+
+        .product-card:hover {
+            border-color: var(--gray-800);
+        }
+
+        .product-number {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .product-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--white);
+        }
+
+        .product-description {
+            color: var(--gray-400);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .product-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .product-link:hover {
+            color: var(--blue-light);
+        }
+
+        /* Philosophy Section */
+        .philosophy {
+            padding: 200px 0;
+        }
+
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1px;
+            background: var(--gray-900);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .philosophy-item {
+            background: var(--black);
+            padding: 48px;
+            position: relative;
+        }
+
+        .philosophy-item::before {
+            content: attr(data-number);
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 14px;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .philosophy-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--white);
+        }
+
+        .philosophy-description {
+            color: var(--gray-400);
+            line-height: 1.6;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 200px 0;
+            background: var(--gray-950);
+        }
+
+        .features-content {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 120px;
+            align-items: start;
+        }
+
+        .features-text {
+            position: sticky;
+            top: 120px;
+        }
+
+        .features-list {
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+        }
+
+        .feature-item {
+            padding: 48px 0;
+            border-bottom: 1px solid var(--gray-900);
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-number {
+            font-size: 14px;
+            color: var(--gray-600);
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .feature-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--white);
+        }
+
+        .feature-description {
+            color: var(--gray-400);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Client Spotlights */
+        .clients {
+            padding: 200px 0;
+            background: var(--black);
+        }
+
+        .clients-carousel {
+            margin-top: 80px;
+        }
+
+        .swiper {
+            overflow: visible;
+        }
+
+        .client-slide {
+            background: var(--gray-950);
+            border-radius: 12px;
+            padding: 48px;
+            border: 1px solid var(--gray-900);
+            height: auto;
+        }
+
+        .client-quote {
+            font-size: 20px;
+            line-height: 1.6;
+            color: var(--white);
+            margin-bottom: 32px;
+            font-style: italic;
+        }
+
+        .client-author {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .client-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .client-info .name {
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 4px;
+        }
+
+        .client-info .role {
+            color: var(--gray-400);
+            font-size: 14px;
+        }
+
+        .swiper-pagination {
+            position: relative;
+            margin-top: 48px;
+        }
+
+        .swiper-pagination-bullet {
+            background: var(--gray-700);
+            opacity: 1;
+            width: 8px;
+            height: 8px;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--blue);
+        }
+
+        /* Blog Section */
+        .blog {
+            padding: 200px 0;
+            background: var(--gray-950);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 80px;
+        }
+
+        .blog-card {
+            background: var(--black);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--gray-900);
+            transition: border-color 0.3s ease;
+        }
+
+        .blog-card:hover {
+            border-color: var(--gray-800);
+        }
+
+        .blog-image {
+            height: 200px;
+            background: var(--gray-900);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-tag {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: var(--black);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .blog-content {
+            padding: 32px;
+        }
+
+        .blog-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--white);
+            line-height: 1.4;
+        }
+
+        .blog-excerpt {
+            color: var(--gray-400);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .blog-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap 0.3s ease;
+        }
+
+        .blog-link:hover {
+            gap: 12px;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 200px 0;
+            text-align: center;
+            position: relative;
+            background: var(--black);
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta h2 {
+            font-size: clamp(36px, 6vw, 72px);
+            margin-bottom: 32px;
+        }
+
+        .cta p {
+            font-size: clamp(18px, 2vw, 24px);
+            color: var(--gray-400);
+            margin-bottom: 48px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border-color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--white);
+        }
+
+        /* Footer */
+        footer {
+            padding: 120px 0 40px;
+            border-top: 1px solid var(--gray-900);
+            background: var(--gray-950);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 80px;
+            margin-bottom: 80px;
+        }
+
+        .footer-brand h3 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .footer-brand p {
+            color: var(--gray-400);
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .footer-column h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-column a {
+            display: block;
+            color: var(--gray-400);
+            text-decoration: none;
+            margin-bottom: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 40px;
+            border-top: 1px solid var(--gray-900);
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-bottom p {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .footer-credit {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .footer-credit a {
+            color: var(--blue);
+            text-decoration: none;
+        }
+
+        .footer-credit a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                margin-bottom: 80px;
+            }
+
+            .hero-stats {
+                gap: 32px;
+                margin-top: 60px;
+            }
+
+            .products-track {
+                gap: 40px;
+            }
+
+            .product-card {
+                min-width: 350px;
+                max-width: 350px;
+            }
+
+            .features-content {
+                grid-template-columns: 1fr;
+                gap: 80px;
+            }
+
+            .features-text {
+                position: static;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: var(--black);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 32px;
+                z-index: 1000;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 24px;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .menu-toggle.open span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .menu-toggle.open span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .menu-toggle.open span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .product-card {
+                min-width: 300px;
+                max-width: 300px;
+                padding: 32px 24px;
+            }
+
+            .philosophy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .philosophy-item {
+                padding: 32px 24px;
+            }
+
+            .features-list {
+                gap: 60px;
+            }
+
+            .feature-item {
+                padding: 32px 0;
+            }
+
+            .client-slide {
+                padding: 32px 24px;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .cursor,
+            .cursor-dot {
+                display: none;
+            }
+        }
+
+        /* Loading Animation */
+        .char {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .line {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* Magnetic Effect */
+        .magnetic {
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: var(--blue);
+            z-index: 1001;
+            transform-origin: left;
+        }
+    </style>
 </head>
 <body>
+    <div class="cursor"></div>
+    <div class="cursor-dot"></div>
+    <div class="scroll-progress"></div>
 
-<!-- NAV -->
-<nav id="navbar">
-<div class="container">
-<a href="#" class="logo">
-<div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-<span>BitGo</span>
-</a>
-<div class="nav-links" id="navLinks">
-<a href="#products">Products</a>
-<a href="#features">Features</a>
-<a href="#philosophy">Philosophy</a>
-<a href="#clients">Clients</a>
-<a href="#resources">Resources</a>
-<a href="#" class="nav-cta">Get Started</a>
-</div>
-<button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
-</div>
-</nav>
+    <nav id="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="#" class="logo">BitGo</a>
+                <div class="nav-links" id="navLinks">
+                    <a href="#products">Products</a>
+                    <a href="#features">Features</a>
+                    <a href="#philosophy">Philosophy</a>
+                    <a href="#clients">Clients</a>
+                    <a href="#resources">Resources</a>
+                    <a href="#" class="nav-cta magnetic">Get Started</a>
+                </div>
+                <button class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
 
-<!-- HERO -->
-<section class="hero">
-<div class="hero-bg">
-<div class="hero-grid"></div>
-<div class="hero-glow"></div>
-<div class="hero-glow-2"></div>
-<canvas id="particles"></canvas>
-</div>
-<div class="container">
-<div class="hero-content">
-<div class="hero-badge"><span class="dot"></span> Trusted by 1,500+ Institutions</div>
-<h1>
-<span class="line1">Secure · Operate · Build</span>
-<span class="line2">Your Digital Asset Strategy</span>
-</h1>
-<p>The digital asset infrastructure company powering the future of finance with institutional-grade security, custody, and liquidity.</p>
-<div class="hero-buttons">
-<a href="#" class="btn-primary">Start Building</a>
-<a href="#products" class="btn-outline">Explore Products</a>
-</div>
-</div>
-</div>
-<div class="scroll-indicator">
-<span>Scroll</span>
-<div class="scroll-line"></div>
-</div>
-</section>
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-label">Since 2013</div>
+                <h1 class="headline" id="heroTitle">
+                    <div class="line">The</div>
+                    <div class="line">Infrastructure</div>
+                    <div class="line">for Digital</div>
+                    <div class="line">Assets</div>
+                </h1>
+                <p class="hero-subtitle" id="heroSubtitle">
+                    Trusted by institutions worldwide to secure, operate, and build on digital assets since 2013.
+                </p>
+                <div class="hero-stats" id="heroStats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value mono">$104B</div>
+                        <div class="hero-stat-label">Assets</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value mono">9.3M+</div>
+                        <div class="hero-stat-label">Wallets</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value mono">#1</div>
+                        <div class="hero-stat-label">Custodian</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- STATS -->
-<section class="stats">
-<div class="container">
-<div class="stats-grid">
-<div class="stat reveal">
-<div class="stat-value" data-target="104" data-prefix="$" data-suffix="B">$0B</div>
-<div class="stat-label">Assets on Platform</div>
-</div>
-<div class="stat reveal reveal-delay-1">
-<div class="stat-value" data-target="9.3" data-suffix="M+" data-decimal="1">0M+</div>
-<div class="stat-label">Wallets Created</div>
-</div>
-<div class="stat reveal reveal-delay-2">
-<div class="stat-value" data-static="#1">#1</div>
-<div class="stat-label">Custodian &amp; Staking Provider</div>
-</div>
-</div>
-</div>
-</section>
+    <section class="products" id="products">
+        <div class="container">
+            <div class="products-intro">
+                <div class="section-number">01</div>
+                <h2 class="section-title headline">Products</h2>
+                <p class="section-subtitle">Five core products that power the digital asset ecosystem</p>
+            </div>
+        </div>
+        
+        <div class="products-horizontal">
+            <div class="products-container">
+                <div class="products-track" id="productsTrack">
+                    <div class="product-card">
+                        <div class="product-number">01</div>
+                        <h3 class="product-title">Prime Services</h3>
+                        <p class="product-description">Institutional trading, financing, collateral management, and settlement — all from a single, unified platform.</p>
+                        <a href="#" class="product-link magnetic">Learn more →</a>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-number">02</div>
+                        <h3 class="product-title">Ecosystem</h3>
+                        <p class="product-description">Seamlessly integrate with exchanges, manage assets across chains, and connect to the broader digital asset ecosystem.</p>
+                        <a href="#" class="product-link magnetic">Learn more →</a>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-number">03</div>
+                        <h3 class="product-title">Stablecoins</h3>
+                        <p class="product-description">Enterprise wallet infrastructure and stablecoin issuance tools purpose-built for the next generation of digital dollars.</p>
+                        <a href="#" class="product-link magnetic">Learn more →</a>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-number">04</div>
+                        <h3 class="product-title">Wallet Services</h3>
+                        <p class="product-description">Institutional-grade, multi-signature wallet infrastructure with advanced policy controls and key management.</p>
+                        <a href="#" class="product-link magnetic">Learn more →</a>
+                    </div>
+                    <div class="product-card">
+                        <div class="product-number">05</div>
+                        <h3 class="product-title">Crypto-as-a-Service</h3>
+                        <p class="product-description">Embed wallets, trading, and on/off ramps directly into your product with our developer-friendly API platform.</p>
+                        <a href="#" class="product-link magnetic">Learn more →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- PRODUCTS -->
-<section class="section" id="products">
-<div class="container">
-<div class="reveal">
-<div class="section-label">Products</div>
-<div class="section-title">Everything You Need to<br>Manage Digital Assets</div>
-<p class="section-sub">Comprehensive infrastructure for institutions, fintechs, and enterprises building on digital assets.</p>
-</div>
-<div class="products-grid">
-<div class="product-card reveal">
-<div class="product-icon">⚡</div>
-<h3>Prime Services</h3>
-<p>Institutional trading, financing, collateral management, and settlement — all from a single, unified platform.</p>
-<div class="card-arrow">→</div>
-</div>
-<div class="product-card reveal reveal-delay-1">
-<div class="product-icon">🌐</div>
-<h3>Ecosystem</h3>
-<p>Seamlessly integrate with exchanges, manage assets across chains, and connect to the broader digital asset ecosystem.</p>
-<div class="card-arrow">→</div>
-</div>
-<div class="product-card reveal reveal-delay-2">
-<div class="product-icon">🪙</div>
-<h3>Stablecoins</h3>
-<p>Enterprise wallet infrastructure and stablecoin issuance tools purpose-built for the next generation of digital dollars.</p>
-<div class="card-arrow">→</div>
-</div>
-<div class="product-card reveal reveal-delay-3">
-<div class="product-icon">🔐</div>
-<h3>Wallet Services</h3>
-<p>Institutional-grade, multi-signature wallet infrastructure with advanced policy controls and key management.</p>
-<div class="card-arrow">→</div>
-</div>
-<div class="product-card reveal reveal-delay-4">
-<div class="product-icon">🧩</div>
-<h3>Crypto-as-a-Service</h3>
-<p>Embed wallets, trading, and on/off ramps directly into your product with our developer-friendly API platform.</p>
-<div class="card-arrow">→</div>
-</div>
-</div>
-</div>
-</section>
+    <section class="philosophy" id="philosophy">
+        <div class="container">
+            <div class="section-number">02</div>
+            <h2 class="section-title headline">Philosophy</h2>
+            <p class="section-subtitle">The principles that guide everything we build</p>
+            
+            <div class="philosophy-grid">
+                <div class="philosophy-item" data-number="01">
+                    <h3 class="philosophy-title">Transparency by Design</h3>
+                    <p class="philosophy-description">Open, auditable, and verifiable at every layer of the stack.</p>
+                </div>
+                <div class="philosophy-item" data-number="02">
+                    <h3 class="philosophy-title">Monetary Freedom</h3>
+                    <p class="philosophy-description">Everyone deserves access to the global financial system.</p>
+                </div>
+                <div class="philosophy-item" data-number="03">
+                    <h3 class="philosophy-title">Borderless and Always-On</h3>
+                    <p class="philosophy-description">Finance that works 24/7, across every border on earth.</p>
+                </div>
+                <div class="philosophy-item" data-number="04">
+                    <h3 class="philosophy-title">Secure and Scarce</h3>
+                    <p class="philosophy-description">Sound money principles embedded in every product we ship.</p>
+                </div>
+                <div class="philosophy-item" data-number="05">
+                    <h3 class="philosophy-title">Infrastructure for Innovation</h3>
+                    <p class="philosophy-description">Building the rails the next generation of finance runs on.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- PHILOSOPHY -->
-<section class="section philosophy" id="philosophy">
-<div class="container">
-<div class="reveal">
-<div class="section-label">Philosophy</div>
-<div class="section-title">What We Believe In</div>
-<p class="section-sub">The principles that guide everything we build.</p>
-</div>
-<div class="phil-grid">
-<div class="phil-item reveal"><span class="phil-icon">🔍</span><h4>Transparency by Design</h4><p>Open, auditable, and verifiable at every layer of the stack.</p></div>
-<div class="phil-item reveal reveal-delay-1"><span class="phil-icon">🗽</span><h4>Monetary Freedom</h4><p>Everyone deserves access to the global financial system.</p></div>
-<div class="phil-item reveal reveal-delay-2"><span class="phil-icon">🌍</span><h4>Borderless &amp; Always-On</h4><p>Finance that works 24/7, across every border on earth.</p></div>
-<div class="phil-item reveal reveal-delay-3"><span class="phil-icon">🛡️</span><h4>Secure &amp; Scarce</h4><p>Sound money principles embedded in every product we ship.</p></div>
-<div class="phil-item reveal reveal-delay-4"><span class="phil-icon">🏗️</span><h4>Infrastructure for Innovation</h4><p>Building the rails the next generation of finance runs on.</p></div>
-</div>
-</div>
-</section>
+    <section class="features" id="features">
+        <div class="container">
+            <div class="features-content">
+                <div class="features-text">
+                    <div class="section-number">03</div>
+                    <h2 class="section-title headline">Features</h2>
+                    <p class="section-subtitle">Powerful capabilities built for institutional scale</p>
+                </div>
+                
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-number">01</div>
+                        <h3 class="feature-title">Go Accounts</h3>
+                        <p class="feature-description">Fully qualified custodial accounts with regulatory compliance, reporting, and institutional governance built in.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-number">02</div>
+                        <h3 class="feature-title">Staking</h3>
+                        <p class="feature-description">Earn yield on digital assets through secure, non-custodial staking with full transparency and flexible terms.</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-number">03</div>
+                        <h3 class="feature-title">Settlement</h3>
+                        <p class="feature-description">Instant, off-chain settlement between counterparties — reducing risk and unlocking capital efficiency.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- FEATURES -->
-<section class="section" id="features">
-<div class="container">
-<div class="reveal">
-<div class="section-label">Features</div>
-<div class="section-title">Powerful Capabilities,<br>Built for Scale</div>
-<p class="section-sub">From staking to settlement, every feature is designed for institutional demands.</p>
-</div>
-<div class="features-grid">
-<div class="feature-card reveal">
-<span class="f-icon">🏦</span>
-<h3>Go Accounts</h3>
-<p>Fully qualified custodial accounts with regulatory compliance, reporting, and institutional governance built in.</p>
-</div>
-<div class="feature-card reveal reveal-delay-1">
-<span class="f-icon">📈</span>
-<h3>Staking</h3>
-<p>Earn yield on digital assets through secure, non-custodial staking with full transparency and flexible terms.</p>
-</div>
-<div class="feature-card reveal reveal-delay-2">
-<span class="f-icon">🔄</span>
-<h3>Go Network / Settlement</h3>
-<p>Instant, off-chain settlement between counterparties — reducing risk and unlocking capital efficiency.</p>
-</div>
-</div>
-</div>
-</section>
+    <section class="clients" id="clients">
+        <div class="container">
+            <div class="section-number">04</div>
+            <h2 class="section-title headline">Client Spotlights</h2>
+            <p class="section-subtitle">Trusted by industry leaders</p>
+            
+            <div class="clients-carousel">
+                <div class="swiper" id="clientsSwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="client-slide">
+                                <p class="client-quote">"BitGo's infrastructure allowed us to scale our custody operations globally while maintaining the highest security standards."</p>
+                                <div class="client-author">
+                                    <div class="client-avatar">JM</div>
+                                    <div class="client-info">
+                                        <div class="name">James Mitchell</div>
+                                        <div class="role">CTO, Global Exchange</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="client-slide">
+                                <p class="client-quote">"The Go Network has transformed how we handle settlement — what took days now takes seconds with zero counterparty risk."</p>
+                                <div class="client-author">
+                                    <div class="client-avatar">SK</div>
+                                    <div class="client-info">
+                                        <div class="name">Sarah Kim</div>
+                                        <div class="role">Head of Operations, FinTech Corp</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="client-slide">
+                                <p class="client-quote">"Their Crypto-as-a-Service APIs let us embed digital assets into our platform in weeks, not months. Exceptional developer experience."</p>
+                                <div class="client-author">
+                                    <div class="client-avatar">RL</div>
+                                    <div class="client-info">
+                                        <div class="name">Raj Lakshmi</div>
+                                        <div class="role">VP Engineering, NeoBank</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- SUPPORT -->
-<section class="section support">
-<div class="container">
-<div class="reveal">
-<div class="section-label">Support</div>
-<div class="section-title">White-Glove Service,<br>Always Available</div>
-<p class="section-sub">Enterprise-grade support for every stage of your journey.</p>
-</div>
-<div class="support-grid">
-<div class="support-item reveal"><div class="s-icon">🌎</div><span>Global Client Support</span></div>
-<div class="support-item reveal reveal-delay-1"><div class="s-icon">👤</div><span>Dedicated Account Manager</span></div>
-<div class="support-item reveal reveal-delay-2"><div class="s-icon">🏷️</div><span>White-Label Solutions</span></div>
-<div class="support-item reveal reveal-delay-3"><div class="s-icon">📅</div><span>Withdraw 7 Days a Week</span></div>
-<div class="support-item reveal reveal-delay-4"><div class="s-icon">🔧</div><span>Technical Tooling &amp; SDKs</span></div>
-</div>
-</div>
-</section>
+    <section class="blog" id="resources">
+        <div class="container">
+            <div class="section-number">05</div>
+            <h2 class="section-title headline">Resources</h2>
+            <p class="section-subtitle">Insights and research from our team</p>
+            
+            <div class="blog-grid">
+                <article class="blog-card magnetic">
+                    <div class="blog-image">
+                        <span class="blog-tag">Research</span>
+                    </div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">The Future of Institutional Custody in a Multi-Chain World</h3>
+                        <p class="blog-excerpt">How institutions are adapting their custody strategies for an increasingly fragmented blockchain landscape.</p>
+                        <a href="#" class="blog-link">Read more →</a>
+                    </div>
+                </article>
+                <article class="blog-card magnetic">
+                    <div class="blog-image">
+                        <span class="blog-tag">Product</span>
+                    </div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">Introducing Go Network 2.0: Instant Settlement at Scale</h3>
+                        <p class="blog-excerpt">Our next-generation settlement layer brings atomic swaps and real-time finality to institutional trading.</p>
+                        <a href="#" class="blog-link">Read more →</a>
+                    </div>
+                </article>
+                <article class="blog-card magnetic">
+                    <div class="blog-image">
+                        <span class="blog-tag">Guide</span>
+                    </div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">Building Compliant Crypto-as-a-Service: A Developer's Guide</h3>
+                        <p class="blog-excerpt">Everything you need to know about embedding regulated digital asset services into your platform.</p>
+                        <a href="#" class="blog-link">Read more →</a>
+                    </div>
+                </article>
+                <article class="blog-card magnetic">
+                    <div class="blog-image">
+                        <span class="blog-tag">Analysis</span>
+                    </div>
+                    <div class="blog-content">
+                        <h3 class="blog-title">Digital Asset Adoption Trends in 2026</h3>
+                        <p class="blog-excerpt">A comprehensive look at how institutions are integrating digital assets into their portfolios and operations.</p>
+                        <a href="#" class="blog-link">Read more →</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
 
-<!-- CLIENTS -->
-<section class="section" id="clients">
-<div class="container">
-<div class="reveal">
-<div class="section-label">Client Spotlights</div>
-<div class="section-title">Trusted by Industry Leaders</div>
-<p class="section-sub">See how institutions around the world build on BitGo.</p>
-</div>
-<div class="clients-grid">
-<div class="client-card reveal">
-<p class="quote">"BitGo's infrastructure allowed us to scale our custody operations globally while maintaining the highest security standards."</p>
-<div class="author"><div class="client-avatar">JM</div><div class="client-info"><div class="name">James Mitchell</div><div class="role">CTO, Global Exchange</div></div></div>
-</div>
-<div class="client-card reveal reveal-delay-1">
-<p class="quote">"The Go Network has transformed how we handle settlement — what took days now takes seconds with zero counterparty risk."</p>
-<div class="author"><div class="client-avatar">SK</div><div class="client-info"><div class="name">Sarah Kim</div><div class="role">Head of Operations, FinTech Corp</div></div></div>
-</div>
-<div class="client-card reveal reveal-delay-2">
-<p class="quote">"Their Crypto-as-a-Service APIs let us embed digital assets into our platform in weeks, not months. Exceptional developer experience."</p>
-<div class="author"><div class="client-avatar">RL</div><div class="client-info"><div class="name">Raj Lakshmi</div><div class="role">VP Engineering, NeoBank</div></div></div>
-</div>
-</div>
-</div>
-</section>
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="headline">Ready to build the future of digital finance?</h2>
+                <p>Join 1,500+ institutions building on the most trusted digital asset infrastructure.</p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn btn-primary magnetic">Get Started Today</a>
+                    <a href="#" class="btn btn-secondary magnetic">Talk to Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- BLOG -->
-<section class="section blog" id="resources">
-<div class="container">
-<div class="reveal">
-<div class="section-label">Resources</div>
-<div class="section-title">Insights &amp; Research</div>
-<p class="section-sub">Stay ahead with the latest in digital asset infrastructure.</p>
-</div>
-<div class="blog-grid">
-<div class="blog-card reveal">
-<div class="blog-thumb"><span class="tag">Research</span></div>
-<div class="blog-body">
-<h3>The Future of Institutional Custody in a Multi-Chain World</h3>
-<p>How institutions are adapting their custody strategies for an increasingly fragmented blockchain landscape.</p>
-<span class="read-more">Read More →</span>
-</div>
-</div>
-<div class="blog-card reveal reveal-delay-1">
-<div class="blog-thumb"><span class="tag">Product</span></div>
-<div class="blog-body">
-<h3>Introducing Go Network 2.0: Instant Settlement at Scale</h3>
-<p>Our next-generation settlement layer brings atomic swaps and real-time finality to institutional trading.</p>
-<span class="read-more">Read More →</span>
-</div>
-</div>
-<div class="blog-card reveal reveal-delay-2">
-<div class="blog-thumb"><span class="tag">Guide</span></div>
-<div class="blog-body">
-<h3>Building Compliant Crypto-as-a-Service: A Developer's Guide</h3>
-<p>Everything you need to know about embedding regulated digital asset services into your platform.</p>
-<span class="read-more">Read More →</span>
-</div>
-</div>
-</div>
-</div>
-</section>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>BitGo</h3>
+                    <p>The digital asset infrastructure company. Securing, operating, and building the future of finance.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Products</h4>
+                    <a href="#">Prime Services</a>
+                    <a href="#">Wallet Services</a>
+                    <a href="#">Stablecoins</a>
+                    <a href="#">Crypto-as-a-Service</a>
+                    <a href="#">Go Network</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Reference</a>
+                    <a href="#">Status</a>
+                    <a href="#">Security</a>
+                    <a href="#">Legal</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 BitGo. All rights reserved.</p>
+                <p class="footer-credit">Redesigned by <a href="#">Andy Garney</a></p>
+            </div>
+        </div>
+    </footer>
 
-<!-- CTA -->
-<section class="cta-section">
-<div class="container">
-<div class="reveal">
-<h2>Ready to Build the Future<br>of Digital Finance?</h2>
-<p>Join 1,500+ institutions building on the most trusted digital asset infrastructure.</p>
-<div class="hero-buttons" style="justify-content:center">
-<a href="#" class="btn-primary">Get Started Today</a>
-<a href="#" class="btn-outline">Talk to Sales</a>
-</div>
-</div>
-</div>
-</section>
+    <script>
+        // Initialize GSAP and plugins
+        gsap.registerPlugin(ScrollTrigger);
 
-<!-- FOOTER -->
-<footer>
-<div class="container">
-<div class="footer-top">
-<div class="footer-brand">
-<a href="#" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><span>BitGo</span></a>
-<p>The digital asset infrastructure company. Securing, operating, and building the future of finance.</p>
-</div>
-<div class="footer-col"><h4>Products</h4><a href="#">Prime Services</a><a href="#">Wallet Services</a><a href="#">Stablecoins</a><a href="#">Crypto-as-a-Service</a><a href="#">Go Network</a></div>
-<div class="footer-col"><h4>Company</h4><a href="#">About</a><a href="#">Careers</a><a href="#">Press</a><a href="#">Blog</a><a href="#">Contact</a></div>
-<div class="footer-col"><h4>Resources</h4><a href="#">Documentation</a><a href="#">API Reference</a><a href="#">Status</a><a href="#">Security</a><a href="#">Legal</a></div>
-</div>
-<div class="footer-bottom">
-<p>&copy; 2026 BitGo. All rights reserved.</p>
-<div class="footer-socials">
-<a href="#" aria-label="Twitter">𝕏</a>
-<a href="#" aria-label="LinkedIn">in</a>
-<a href="#" aria-label="GitHub">⌨</a>
-<a href="#" aria-label="Discord">⬡</a>
-</div>
-</div>
-<div class="credit">Redesigned by <a href="#">Andy Garney</a></div>
-</div>
-</footer>
+        // Smooth scrolling with Lenis
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smooth: true,
+        });
 
-<script>
-// Particles
-(function(){
-const c=document.getElementById('particles'),ctx=c.getContext('2d');
-let w,h,particles=[];
-function resize(){w=c.width=c.offsetWidth;h=c.height=c.offsetHeight}
-window.addEventListener('resize',resize);resize();
-for(let i=0;i<60;i++)particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+.5,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,o:Math.random()*.4+.1});
-function draw(){
-ctx.clearRect(0,0,w,h);
-particles.forEach(p=>{
-p.x+=p.dx;p.y+=p.dy;
-if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;
-ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-ctx.fillStyle=`rgba(0,212,255,${p.o})`;ctx.fill();
-});
-// connections
-for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){
-const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,d=Math.sqrt(dx*dx+dy*dy);
-if(d<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);
-ctx.strokeStyle=`rgba(0,212,255,${.06*(1-d/120)})`;ctx.stroke();}
-}
-requestAnimationFrame(draw);
-}
-draw();
-})();
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
 
-// Nav scroll
-const nav=document.getElementById('navbar');
-window.addEventListener('scroll',()=>{nav.classList.toggle('scrolled',window.scrollY>50)});
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorDot = document.querySelector('.cursor-dot');
 
-// Mobile menu
-document.getElementById('menuToggle').addEventListener('click',()=>{
-document.getElementById('navLinks').classList.toggle('open');
-});
-document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>{
-document.getElementById('navLinks').classList.remove('open');
-}));
+        if (window.innerWidth > 768) {
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, {
+                    x: e.clientX - 10,
+                    y: e.clientY - 10,
+                    duration: 0.3,
+                    ease: "power2.out"
+                });
+                gsap.to(cursorDot, {
+                    x: e.clientX - 2,
+                    y: e.clientY - 2,
+                    duration: 0.1,
+                    ease: "power2.out"
+                });
+            });
 
-// Intersection Observer for reveals
-const obs=new IntersectionObserver((entries)=>{
-entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
-},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+            // Magnetic effect
+            document.querySelectorAll('.magnetic').forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    gsap.to(cursor, { scale: 2, duration: 0.3 });
+                });
+                el.addEventListener('mouseleave', () => {
+                    gsap.to(cursor, { scale: 1, duration: 0.3 });
+                });
+            });
+        }
 
-// Animated counters
-const statObs=new IntersectionObserver((entries)=>{
-entries.forEach(e=>{
-if(!e.isIntersecting)return;
-const el=e.target,s=el.dataset.static;
-if(s){el.textContent=s;statObs.unobserve(e.target);return;}
-const target=parseFloat(el.dataset.target),prefix=el.dataset.prefix||'',suffix=el.dataset.suffix||'',dec=parseInt(el.dataset.decimal)||0;
-let start=0;const duration=2000,startTime=performance.now();
-function tick(now){
-const p=Math.min((now-startTime)/duration,1);
-const eased=1-Math.pow(1-p,3);
-const val=(eased*target).toFixed(dec);
-el.textContent=prefix+val+suffix;
-if(p<1)requestAnimationFrame(tick);
-}
-requestAnimationFrame(tick);
-statObs.unobserve(e.target);
-});
-},{threshold:.5});
-document.querySelectorAll('.stat-value').forEach(el=>statObs.observe(el));
-</script>
+        // Navigation scroll effect
+        ScrollTrigger.create({
+            start: "top -80",
+            end: 99999,
+            toggleClass: { className: "scrolled", targets: "#navbar" }
+        });
+
+        // Mobile menu
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('open');
+            navLinks.classList.toggle('open');
+        });
+
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('open');
+                navLinks.classList.remove('open');
+            });
+        });
+
+        // Hero animations
+        const heroTitle = document.getElementById('heroTitle');
+        const heroSubtitle = document.getElementById('heroSubtitle');
+        const heroStats = document.getElementById('heroStats');
+        const heroLabel = document.querySelector('.hero-label');
+
+        // Split text for hero title
+        const titleLines = heroTitle.querySelectorAll('.line');
+
+        const tl = gsap.timeline();
+
+        tl.to(heroLabel, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        })
+        .to(titleLines, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: "power2.out"
+        }, "-=0.3")
+        .to(heroSubtitle, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        }, "-=0.5")
+        .to(heroStats, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out"
+        }, "-=0.3");
+
+        // Horizontal scrolling products
+        let mm = gsap.matchMedia();
+
+        mm.add("(min-width: 768px)", () => {
+            const productsTrack = document.getElementById('productsTrack');
+            const productCards = productsTrack.querySelectorAll('.product-card');
+            const trackWidth = productsTrack.scrollWidth;
+            const containerWidth = window.innerWidth;
+
+            gsap.to(productsTrack, {
+                x: () => -(trackWidth - containerWidth),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".products-horizontal",
+                    start: "top top",
+                    end: () => "+=" + (trackWidth - containerWidth),
+                    pin: true,
+                    scrub: 1,
+                    invalidateOnRefresh: true
+                }
+            });
+
+            // Animate product cards
+            productCards.forEach((card, i) => {
+                gsap.fromTo(card, {
+                    opacity: 0,
+                    y: 50
+                }, {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "left 80%",
+                        end: "left 20%",
+                        containerAnimation: gsap.to(productsTrack, {
+                            x: () => -(trackWidth - containerWidth),
+                            ease: "none",
+                        }),
+                        toggleActions: "play none none reverse"
+                    }
+                });
+            });
+        });
+
+        // Philosophy section animations
+        gsap.fromTo('.philosophy-item', {
+            opacity: 0,
+            y: 50
+        }, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: '.philosophy-grid',
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Features section animations
+        gsap.fromTo('.feature-item', {
+            opacity: 0,
+            x: 50
+        }, {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            scrollTrigger: {
+                trigger: '.features-list',
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Client spotlights carousel
+        const clientsSwiper = new Swiper('#clientsSwiper', {
+            slidesPerView: 1,
+            spaceBetween: 32,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 2,
+                },
+                1024: {
+                    slidesPerView: 3,
+                }
+            }
+        });
+
+        // Blog cards animation
+        gsap.fromTo('.blog-card', {
+            opacity: 0,
+            y: 50
+        }, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            scrollTrigger: {
+                trigger: '.blog-grid',
+                start: "top 80%",
+                end: "bottom 20%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Section title animations
+        gsap.utils.toArray('.section-title').forEach(title => {
+            gsap.fromTo(title, {
+                opacity: 0,
+                y: 50
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
+                }
+            });
+        });
+
+        // Scroll progress
+        gsap.to('.scroll-progress', {
+            scaleX: 1,
+            transformOrigin: "left center",
+            ease: "none",
+            scrollTrigger: {
+                start: "top top",
+                end: "max",
+                scrub: 0.3
+            }
+        });
+
+        // Parallax effect for section numbers
+        gsap.utils.toArray('.section-number').forEach(number => {
+            gsap.fromTo(number, {
+                y: 100
+            }, {
+                y: -100,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: number,
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
+                }
+            });
+        });
+
+        // CTA animation
+        gsap.fromTo('.cta-content', {
+            opacity: 0,
+            y: 50
+        }, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: '.cta',
+                start: "top 80%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Footer animation
+        gsap.fromTo('.footer-content', {
+            opacity: 0,
+            y: 50
+        }, {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: 'footer',
+                start: "top 90%",
+                toggleActions: "play none none reverse"
+            }
+        });
+
+        // Update ScrollTrigger on window resize
+        window.addEventListener('resize', () => {
+            ScrollTrigger.refresh();
+        });
+    </script>
 </body>
 </html>
