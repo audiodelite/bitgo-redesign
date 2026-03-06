@@ -6,33 +6,25 @@
     <title>BitGo — The Infrastructure for Digital Assets</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- External Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.26/dist/lenis.min.js"></script>
-    <script src="https://unpkg.com/split-type@0.3.3/dist/index.umd.js"></script>
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
     <script src="https://unpkg.com/swiper@10/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/swiper@10/swiper-bundle.min.css">
 
     <style>
         :root {
-            --black: #09090b;
-            --gray-950: #0a0a0a; 
-            --gray-900: #111113;
-            --gray-800: #1c1c20;
-            --gray-700: #2a2a2d;
-            --gray-600: #3a3a3f;
-            --gray-500: #6b7280;
-            --gray-400: #9ca3af;
-            --gray-300: #d1d5db;
-            --gray-200: #e5e7eb;
-            --gray-100: #f3f4f6;
+            --apple-dark: #1d1d1f;
+            --apple-light: #f5f5f7;
             --white: #ffffff;
-            --blue: #0066ff;
-            --blue-light: #3b82f6;
-            --blue-dark: #1e40af;
+            --black: #000000;
+            --gray-dark: #86868b;
+            --gray-light: #6e6e73;
+            --blue: #007aff;
+            --text-dark: #1d1d1f;
         }
 
         * {
@@ -42,64 +34,97 @@
         }
 
         html {
-            font-size: 16px;
+            font-size: 17px;
+            scroll-behavior: auto;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--black);
-            color: var(--white);
-            line-height: 1.6;
-            overflow-x: hidden;
-            cursor: none;
-        }
-
-        /* Custom Cursor */
-        .cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--blue);
-            pointer-events: none;
-            z-index: 9999;
-            mix-blend-mode: difference;
-            transition: transform 0.2s ease;
-        }
-
-        .cursor-dot {
-            position: fixed;
-            width: 4px;
-            height: 4px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.47059;
+            font-weight: 400;
+            letter-spacing: -0.022em;
             background: var(--white);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 10000;
+            color: var(--text-dark);
+            overflow-x: hidden;
         }
 
         /* Typography */
-        .headline {
-            font-family: 'Instrument Serif', Georgia, serif;
-            font-weight: 400;
-            line-height: 0.95;
+        .display {
+            font-size: clamp(48px, 8vw, 96px);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.015em;
+        }
+
+        .display-large {
+            font-size: clamp(64px, 12vw, 144px);
+            font-weight: 700;
+            line-height: 1.02;
             letter-spacing: -0.02em;
         }
 
-        .mono {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
+        .headline {
+            font-size: clamp(32px, 5vw, 56px);
+            font-weight: 700;
+            line-height: 1.07;
+            letter-spacing: -0.015em;
+        }
+
+        .title {
+            font-size: clamp(24px, 3vw, 32px);
+            font-weight: 600;
+            line-height: 1.125;
+            letter-spacing: -0.01em;
+        }
+
+        .body-large {
+            font-size: clamp(19px, 2vw, 21px);
+            line-height: 1.381;
+            font-weight: 400;
+        }
+
+        .body {
+            font-size: 17px;
+            line-height: 1.47059;
+            font-weight: 400;
         }
 
         /* Layout */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 100px 0;
+        }
+
+        .section-dark {
+            background: var(--apple-dark);
+            color: var(--white);
+        }
+
+        .section-light {
+            background: var(--white);
+            color: var(--text-dark);
+        }
+
         .container {
-            max-width: 1400px;
+            width: 100%;
+            max-width: 980px;
             margin: 0 auto;
-            padding: 0 clamp(24px, 5vw, 80px);
+            padding: 0 22px;
         }
 
         .container-wide {
-            max-width: 1600px;
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 clamp(24px, 3vw, 40px);
+            padding: 0 22px;
+        }
+
+        .text-center {
+            text-align: center;
         }
 
         /* Navigation */
@@ -109,412 +134,350 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            padding: 24px 0;
-            transition: background 0.3s ease, backdrop-filter 0.3s ease;
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid rgba(0, 0, 0, 0.18);
+            transition: all 0.3s ease;
         }
 
-        nav.scrolled {
-            background: rgba(9, 9, 11, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+        nav.dark {
+            background: rgba(29, 29, 31, 0.72);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.18);
+        }
+
+        nav.dark .logo,
+        nav.dark .nav-links a {
+            color: var(--white);
         }
 
         .nav-content {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            height: 48px;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0 22px;
         }
 
         .logo {
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--white);
+            font-size: 21px;
+            font-weight: 700;
+            color: var(--text-dark);
             text-decoration: none;
-            z-index: 1001;
+            transition: color 0.3s ease;
         }
 
         .nav-links {
             display: flex;
-            gap: 40px;
             align-items: center;
+            gap: 40px;
         }
 
         .nav-links a {
-            color: var(--gray-400);
+            color: var(--text-dark);
             text-decoration: none;
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 17px;
+            font-weight: 400;
             transition: color 0.3s ease;
-            position: relative;
+            opacity: 0.8;
         }
 
         .nav-links a:hover {
-            color: var(--white);
-        }
-
-        .nav-cta {
-            background: var(--white);
-            color: var(--black) !important;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-cta:hover {
-            background: transparent;
-            color: var(--white) !important;
-            border-color: var(--white);
+            opacity: 1;
         }
 
         .menu-toggle {
             display: none;
-            flex-direction: column;
-            gap: 4px;
             background: none;
             border: none;
             cursor: pointer;
-            z-index: 1001;
+            padding: 8px;
         }
 
-        .menu-toggle span {
+        .hamburger {
             width: 20px;
-            height: 2px;
-            background: var(--white);
-            transition: 0.3s ease;
+            height: 20px;
+            position: relative;
         }
 
-        /* Hero Section */
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger span:nth-child(1) { top: 6px; }
+        .hamburger span:nth-child(2) { top: 10px; }
+        .hamburger span:nth-child(3) { top: 14px; }
+
+        /* Hero */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
+            background: var(--apple-dark);
+            color: var(--white);
+            text-align: center;
             position: relative;
             overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            background: 
-                radial-gradient(circle at 30% 20%, rgba(0, 102, 255, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(0, 102, 255, 0.03) 0%, transparent 50%);
         }
 
         .hero-content {
             position: relative;
             z-index: 2;
-            max-width: 1000px;
         }
 
-        .hero-label {
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--gray-500);
-            margin-bottom: 40px;
-            opacity: 0;
+        .hero-badge {
+            font-size: 19px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 20px;
+            font-weight: 400;
         }
 
         .hero h1 {
-            font-size: clamp(48px, 8vw, 120px);
-            margin-bottom: 32px;
-            color: var(--white);
-            opacity: 0;
+            margin-bottom: 20px;
         }
 
         .hero-subtitle {
-            font-size: clamp(18px, 2vw, 24px);
-            color: var(--gray-400);
-            margin-bottom: 48px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 60px;
             max-width: 600px;
-            opacity: 0;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .hero-stats {
-            display: flex;
-            gap: 64px;
-            margin-top: 80px;
-            opacity: 0;
+        /* Stats Section */
+        .stats {
+            background: var(--white);
+            color: var(--text-dark);
         }
 
-        .hero-stat {
-            text-align: left;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 80px;
+            text-align: center;
         }
 
-        .hero-stat-value {
-            font-size: clamp(24px, 3vw, 36px);
+        .stat-value {
+            font-size: clamp(48px, 8vw, 80px);
             font-weight: 700;
-            color: var(--white);
             line-height: 1;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            color: var(--text-dark);
         }
 
-        .hero-stat-label {
-            font-size: 14px;
-            color: var(--gray-500);
-            font-weight: 500;
+        .stat-label {
+            font-size: 19px;
+            color: var(--gray-light);
+            font-weight: 400;
         }
 
         /* Products Section */
         .products {
-            padding: 200px 0;
+            background: var(--apple-dark);
+            color: var(--white);
+            min-height: 500vh;
             position: relative;
         }
 
-        .products-intro {
-            margin-bottom: 120px;
-        }
-
-        .section-number {
-            font-size: 120px;
-            font-weight: 800;
-            color: transparent;
-            -webkit-text-stroke: 1px var(--gray-900);
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            line-height: 1;
-        }
-
-        .section-title {
-            font-size: clamp(32px, 5vw, 64px);
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-        }
-
-        .section-subtitle {
-            font-size: clamp(16px, 2vw, 20px);
-            color: var(--gray-400);
-            max-width: 500px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .products-horizontal {
-            position: relative;
-            height: 100vh;
-        }
-
-        .products-container {
+        .products-sticky {
             position: sticky;
             top: 0;
             height: 100vh;
-            overflow: hidden;
             display: flex;
             align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
-        .products-track {
-            display: flex;
-            gap: 80px;
-            padding-left: clamp(24px, 5vw, 80px);
+        .product-showcase {
+            text-align: center;
+            position: relative;
         }
 
-        .product-card {
-            min-width: 400px;
-            max-width: 400px;
-            padding: 48px 40px;
-            background: var(--gray-950);
-            border-radius: 12px;
-            border: 1px solid var(--gray-900);
-            transition: border-color 0.3s ease;
-        }
-
-        .product-card:hover {
-            border-color: var(--gray-800);
-        }
-
-        .product-number {
-            font-size: 14px;
-            color: var(--gray-600);
+        .product-counter {
+            font-size: 17px;
+            color: rgba(255, 255, 255, 0.6);
             margin-bottom: 24px;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .product-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--white);
+            margin-bottom: 24px;
         }
 
         .product-description {
-            color: var(--gray-400);
-            line-height: 1.6;
-            margin-bottom: 32px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        .product-link {
-            color: var(--blue);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 15px;
-            transition: color 0.3s ease;
-        }
-
-        .product-link:hover {
-            color: var(--blue-light);
+        .product-visual {
+            width: 400px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            margin: 60px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
         }
 
         /* Philosophy Section */
         .philosophy {
-            padding: 200px 0;
+            background: var(--white);
+            color: var(--text-dark);
+        }
+
+        .philosophy-intro {
+            text-align: center;
+            margin-bottom: 100px;
         }
 
         .philosophy-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1px;
-            background: var(--gray-900);
-            border-radius: 12px;
-            overflow: hidden;
-            margin-top: 80px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 60px;
         }
 
         .philosophy-item {
-            background: var(--black);
-            padding: 48px;
-            position: relative;
+            text-align: center;
         }
 
-        .philosophy-item::before {
-            content: attr(data-number);
-            position: absolute;
-            top: 24px;
-            right: 24px;
-            font-size: 14px;
-            color: var(--gray-600);
-            font-weight: 600;
+        .philosophy-number {
+            font-size: 17px;
+            color: var(--gray-light);
+            margin-bottom: 20px;
+            font-weight: 500;
         }
 
         .philosophy-title {
-            font-size: 20px;
-            font-weight: 700;
             margin-bottom: 16px;
-            color: var(--white);
         }
 
         .philosophy-description {
-            color: var(--gray-400);
-            line-height: 1.6;
+            color: var(--gray-light);
+            line-height: 1.5;
         }
 
         /* Features Section */
         .features {
-            padding: 200px 0;
-            background: var(--gray-950);
+            background: var(--apple-dark);
+            color: var(--white);
+            min-height: 400vh;
+            position: relative;
         }
 
-        .features-content {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 120px;
-            align-items: start;
-        }
-
-        .features-text {
+        .features-sticky {
             position: sticky;
-            top: 120px;
-        }
-
-        .features-list {
+            top: 0;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
-            gap: 80px;
+            align-items: center;
+            justify-content: center;
         }
 
-        .feature-item {
-            padding: 48px 0;
-            border-bottom: 1px solid var(--gray-900);
+        .feature-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 120px;
+            align-items: center;
         }
 
-        .feature-item:last-child {
-            border-bottom: none;
+        .feature-content {
+            text-align: left;
         }
 
         .feature-number {
-            font-size: 14px;
-            color: var(--gray-600);
-            margin-bottom: 16px;
-            font-weight: 600;
+            font-size: 17px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 24px;
+            font-weight: 500;
         }
 
         .feature-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--white);
+            margin-bottom: 24px;
         }
 
         .feature-description {
-            color: var(--gray-400);
-            line-height: 1.6;
-            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
         }
 
-        /* Client Spotlights */
+        .feature-visual {
+            width: 100%;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+        }
+
+        /* Clients Section */
         .clients {
-            padding: 200px 0;
-            background: var(--black);
+            background: var(--white);
+            color: var(--text-dark);
         }
 
-        .clients-carousel {
-            margin-top: 80px;
+        .clients-intro {
+            text-align: center;
+            margin-bottom: 80px;
         }
 
         .swiper {
             overflow: visible;
+            padding: 0 22px;
         }
 
-        .client-slide {
-            background: var(--gray-950);
-            border-radius: 12px;
+        .client-card {
+            background: var(--apple-light);
+            border-radius: 18px;
             padding: 48px;
-            border: 1px solid var(--gray-900);
+            text-align: center;
             height: auto;
         }
 
         .client-quote {
-            font-size: 20px;
-            line-height: 1.6;
-            color: var(--white);
+            font-size: 24px;
+            line-height: 1.4;
             margin-bottom: 32px;
-            font-style: italic;
+            font-weight: 500;
         }
 
         .client-author {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 16px;
         }
 
         .client-avatar {
-            width: 48px;
-            height: 48px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: var(--blue);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--white);
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 18px;
         }
 
-        .client-info .name {
+        .client-name {
             font-weight: 600;
-            color: var(--white);
             margin-bottom: 4px;
         }
 
-        .client-info .role {
-            color: var(--gray-400);
-            font-size: 14px;
+        .client-role {
+            color: var(--gray-light);
+            font-size: 15px;
         }
 
         .swiper-pagination {
@@ -523,118 +486,114 @@
         }
 
         .swiper-pagination-bullet {
-            background: var(--gray-700);
-            opacity: 1;
             width: 8px;
             height: 8px;
+            background: var(--gray-light);
+            opacity: 1;
         }
 
         .swiper-pagination-bullet-active {
-            background: var(--blue);
+            background: var(--text-dark);
         }
 
-        /* Blog Section */
-        .blog {
-            padding: 200px 0;
-            background: var(--gray-950);
+        /* Resources Section */
+        .resources {
+            background: var(--apple-dark);
+            color: var(--white);
         }
 
-        .blog-grid {
+        .resources-intro {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .resources-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 32px;
-            margin-top: 80px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
         }
 
-        .blog-card {
-            background: var(--black);
-            border-radius: 12px;
+        .resource-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
             overflow: hidden;
-            border: 1px solid var(--gray-900);
-            transition: border-color 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
-        .blog-card:hover {
-            border-color: var(--gray-800);
+        .resource-card:hover {
+            transform: translateY(-8px);
         }
 
-        .blog-image {
+        .resource-image {
             height: 200px;
-            background: var(--gray-900);
+            background: rgba(255, 255, 255, 0.1);
             position: relative;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .blog-tag {
+        .resource-tag {
             position: absolute;
             top: 16px;
             left: 16px;
-            background: var(--black);
+            background: rgba(0, 0, 0, 0.6);
             color: var(--white);
             padding: 6px 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
 
-        .blog-content {
+        .resource-content {
             padding: 32px;
         }
 
-        .blog-title {
-            font-size: 18px;
-            font-weight: 700;
+        .resource-title {
+            font-size: 21px;
+            font-weight: 600;
             margin-bottom: 12px;
-            color: var(--white);
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
-        .blog-excerpt {
-            color: var(--gray-400);
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 15px;
+        .resource-excerpt {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+            margin-bottom: 24px;
         }
 
-        .blog-link {
+        .resource-link {
             color: var(--blue);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             transition: gap 0.3s ease;
         }
 
-        .blog-link:hover {
+        .resource-link:hover {
             gap: 12px;
         }
 
         /* CTA Section */
         .cta {
-            padding: 200px 0;
+            background: var(--white);
+            color: var(--text-dark);
             text-align: center;
-            position: relative;
-            background: var(--black);
-        }
-
-        .cta-content {
-            max-width: 800px;
-            margin: 0 auto;
         }
 
         .cta h2 {
-            font-size: clamp(36px, 6vw, 72px);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
-        .cta p {
-            font-size: clamp(18px, 2vw, 24px);
-            color: var(--gray-400);
+        .cta-subtitle {
+            color: var(--gray-light);
             margin-bottom: 48px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .cta-buttons {
@@ -646,78 +605,77 @@
 
         .btn {
             padding: 16px 32px;
-            border-radius: 8px;
+            border-radius: 980px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 400;
+            font-size: 17px;
             transition: all 0.3s ease;
-            border: 1px solid transparent;
+            border: none;
+            cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            min-width: 160px;
         }
 
         .btn-primary {
-            background: var(--white);
-            color: var(--black);
+            background: var(--blue);
+            color: var(--white);
         }
 
         .btn-primary:hover {
-            background: transparent;
-            color: var(--white);
-            border-color: var(--white);
+            background: #0051d5;
         }
 
         .btn-secondary {
             background: transparent;
-            color: var(--white);
-            border-color: var(--gray-700);
+            color: var(--blue);
+            border: 1px solid var(--blue);
         }
 
         .btn-secondary:hover {
-            border-color: var(--white);
+            background: var(--blue);
+            color: var(--white);
         }
 
         /* Footer */
         footer {
-            padding: 120px 0 40px;
-            border-top: 1px solid var(--gray-900);
-            background: var(--gray-950);
+            background: var(--apple-dark);
+            color: var(--white);
+            padding: 80px 0 40px;
         }
 
         .footer-content {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 80px;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         .footer-brand h3 {
-            font-size: 20px;
-            font-weight: 800;
+            font-size: 21px;
+            font-weight: 700;
             margin-bottom: 16px;
         }
 
         .footer-brand p {
-            color: var(--gray-400);
-            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
             max-width: 300px;
         }
 
         .footer-column h4 {
-            font-size: 14px;
+            font-size: 17px;
             font-weight: 600;
             margin-bottom: 24px;
-            color: var(--white);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
 
         .footer-column a {
             display: block;
-            color: var(--gray-400);
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             margin-bottom: 16px;
+            font-size: 17px;
             transition: color 0.3s ease;
         }
 
@@ -730,19 +688,14 @@
             justify-content: space-between;
             align-items: center;
             padding-top: 40px;
-            border-top: 1px solid var(--gray-900);
+            border-top: 0.5px solid rgba(255, 255, 255, 0.18);
             flex-wrap: wrap;
             gap: 24px;
         }
 
         .footer-bottom p {
-            color: var(--gray-500);
-            font-size: 14px;
-        }
-
-        .footer-credit {
-            color: var(--gray-500);
-            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
         }
 
         .footer-credit a {
@@ -750,124 +703,40 @@
             text-decoration: none;
         }
 
-        .footer-credit a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .hero-content {
-                margin-bottom: 80px;
-            }
-
-            .hero-stats {
-                gap: 32px;
-                margin-top: 60px;
-            }
-
-            .products-track {
-                gap: 40px;
-            }
-
-            .product-card {
-                min-width: 350px;
-                max-width: 350px;
-            }
-
-            .features-content {
-                grid-template-columns: 1fr;
-                gap: 80px;
-            }
-
-            .features-text {
-                position: static;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 60px;
-            }
-        }
-
-        @media (max-width: 768px) {
+        /* Responsive */
+        @media (max-width: 834px) {
+            html { font-size: 16px; }
+            
+            .section { padding: 60px 0; }
+            
             .nav-links {
                 display: none;
                 position: fixed;
-                top: 0;
+                top: 48px;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background: var(--black);
+                background: var(--white);
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 gap: 32px;
-                z-index: 1000;
+                z-index: 999;
             }
+            
+            .nav-links.open { display: flex; }
+            
+            .menu-toggle { display: block; }
 
-            .nav-links.open {
-                display: flex;
-            }
-
-            .nav-links a {
-                font-size: 24px;
-            }
-
-            .menu-toggle {
-                display: flex;
-            }
-
-            .menu-toggle.open span:nth-child(1) {
-                transform: rotate(45deg) translate(5px, 5px);
-            }
-
-            .menu-toggle.open span:nth-child(2) {
-                opacity: 0;
-            }
-
-            .menu-toggle.open span:nth-child(3) {
-                transform: rotate(-45deg) translate(7px, -6px);
-            }
-
-            .hero-stats {
-                flex-direction: column;
-                gap: 24px;
-            }
-
-            .product-card {
-                min-width: 300px;
-                max-width: 300px;
-                padding: 32px 24px;
-            }
-
-            .philosophy-grid {
+            .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 40px;
             }
 
-            .philosophy-item {
-                padding: 32px 24px;
-            }
-
-            .features-list {
+            .feature-showcase {
+                grid-template-columns: 1fr;
                 gap: 60px;
-            }
-
-            .feature-item {
-                padding: 32px 0;
-            }
-
-            .client-slide {
-                padding: 32px 24px;
-            }
-
-            .blog-grid {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
+                text-align: center;
             }
 
             .footer-content {
@@ -880,326 +749,284 @@
                 text-align: center;
             }
 
-            body {
-                cursor: auto;
-            }
-
-            .cursor,
-            .cursor-dot {
-                display: none;
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
             }
         }
 
-        /* Loading Animation */
-        .char {
+        @media (max-width: 430px) {
+            .container, .container-wide { padding: 0 16px; }
+            .nav-content { padding: 0 16px; }
+            
+            .product-visual,
+            .feature-visual {
+                height: 250px;
+                margin: 40px auto;
+            }
+            
+            .client-card { padding: 32px 24px; }
+            .resource-content { padding: 24px; }
+        }
+
+        /* Animations */
+        .fade-in {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(40px);
         }
 
-        .line {
-            opacity: 0;
-            transform: translateY(30px);
+        /* Fallback: if GSAP fails, show everything */
+        .no-js .fade-in,
+        .gsap-failed .fade-in {
+            opacity: 1 !important;
+            transform: none !important;
         }
 
-        /* Magnetic Effect */
-        .magnetic {
-            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        /* Scroll Progress */
-        .scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 2px;
-            background: var(--blue);
-            z-index: 1001;
-            transform-origin: left;
+        .parallax-element {
+            will-change: transform;
         }
     </style>
 </head>
-<body>
-    <div class="cursor"></div>
-    <div class="cursor-dot"></div>
-    <div class="scroll-progress"></div>
-
+<body class="no-js">
+<script>document.body.classList.remove('no-js');if(!window.gsap)setTimeout(()=>{if(!window.gsap)document.body.classList.add('gsap-failed')},3000);</script>
     <nav id="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <a href="#" class="logo">BitGo</a>
-                <div class="nav-links" id="navLinks">
-                    <a href="#products">Products</a>
-                    <a href="#features">Features</a>
-                    <a href="#philosophy">Philosophy</a>
-                    <a href="#clients">Clients</a>
-                    <a href="#resources">Resources</a>
-                    <a href="#" class="nav-cta magnetic">Get Started</a>
-                </div>
-                <button class="menu-toggle" id="menuToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
+        <div class="nav-content">
+            <a href="#" class="logo">BitGo</a>
+            <div class="nav-links" id="navLinks">
+                <a href="#products">Products</a>
+                <a href="#features">Features</a>
+                <a href="#philosophy">Philosophy</a>
+                <a href="#clients">Clients</a>
+                <a href="#resources">Resources</a>
             </div>
+            <button class="menu-toggle" id="menuToggle">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </button>
         </div>
     </nav>
 
-    <section class="hero">
-        <div class="hero-bg"></div>
-        <div class="container">
+    <!-- Hero Section -->
+    <section class="section hero">
+        <div class="container text-center">
             <div class="hero-content">
-                <div class="hero-label">Since 2013</div>
-                <h1 class="headline" id="heroTitle">
-                    <div class="line">The</div>
-                    <div class="line">Infrastructure</div>
-                    <div class="line">for Digital</div>
-                    <div class="line">Assets</div>
-                </h1>
-                <p class="hero-subtitle" id="heroSubtitle">
-                    Trusted by institutions worldwide to secure, operate, and build on digital assets since 2013.
-                </p>
-                <div class="hero-stats" id="heroStats">
-                    <div class="hero-stat">
-                        <div class="hero-stat-value mono">$104B</div>
-                        <div class="hero-stat-label">Assets</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value mono">9.3M+</div>
-                        <div class="hero-stat-label">Wallets</div>
-                    </div>
-                    <div class="hero-stat">
-                        <div class="hero-stat-value mono">#1</div>
-                        <div class="hero-stat-label">Custodian</div>
-                    </div>
+                <div class="hero-badge fade-in">Trusted by institutions worldwide</div>
+                <h1 class="display-large fade-in">The Infrastructure<br>for Digital Assets</h1>
+                <p class="body-large hero-subtitle fade-in">Secure, operate, and build on digital assets since 2013.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat fade-in">
+                    <div class="stat-value">$104B</div>
+                    <div class="stat-label">Assets on Platform</div>
+                </div>
+                <div class="stat fade-in">
+                    <div class="stat-value">9.3M+</div>
+                    <div class="stat-label">Wallets Created</div>
+                </div>
+                <div class="stat fade-in">
+                    <div class="stat-value">#1</div>
+                    <div class="stat-label">Custodian</div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Products Section -->
     <section class="products" id="products">
-        <div class="container">
-            <div class="products-intro">
-                <div class="section-number">01</div>
-                <h2 class="section-title headline">Products</h2>
-                <p class="section-subtitle">Five core products that power the digital asset ecosystem</p>
-            </div>
-        </div>
-        
-        <div class="products-horizontal">
-            <div class="products-container">
-                <div class="products-track" id="productsTrack">
-                    <div class="product-card">
-                        <div class="product-number">01</div>
-                        <h3 class="product-title">Prime Services</h3>
-                        <p class="product-description">Institutional trading, financing, collateral management, and settlement — all from a single, unified platform.</p>
-                        <a href="#" class="product-link magnetic">Learn more →</a>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-number">02</div>
-                        <h3 class="product-title">Ecosystem</h3>
-                        <p class="product-description">Seamlessly integrate with exchanges, manage assets across chains, and connect to the broader digital asset ecosystem.</p>
-                        <a href="#" class="product-link magnetic">Learn more →</a>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-number">03</div>
-                        <h3 class="product-title">Stablecoins</h3>
-                        <p class="product-description">Enterprise wallet infrastructure and stablecoin issuance tools purpose-built for the next generation of digital dollars.</p>
-                        <a href="#" class="product-link magnetic">Learn more →</a>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-number">04</div>
-                        <h3 class="product-title">Wallet Services</h3>
-                        <p class="product-description">Institutional-grade, multi-signature wallet infrastructure with advanced policy controls and key management.</p>
-                        <a href="#" class="product-link magnetic">Learn more →</a>
-                    </div>
-                    <div class="product-card">
-                        <div class="product-number">05</div>
-                        <h3 class="product-title">Crypto-as-a-Service</h3>
-                        <p class="product-description">Embed wallets, trading, and on/off ramps directly into your product with our developer-friendly API platform.</p>
-                        <a href="#" class="product-link magnetic">Learn more →</a>
-                    </div>
+        <div class="products-sticky">
+            <div class="container">
+                <div class="product-showcase text-center">
+                    <div class="product-counter">01 / 05</div>
+                    <h2 class="headline product-title">Prime Services</h2>
+                    <p class="body-large product-description">Institutional trading, financing, collateral management, and settlement — all from a single, unified platform.</p>
+                    <div class="product-visual">⚡</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="philosophy" id="philosophy">
+    <!-- Philosophy Section -->
+    <section class="section philosophy" id="philosophy">
         <div class="container">
-            <div class="section-number">02</div>
-            <h2 class="section-title headline">Philosophy</h2>
-            <p class="section-subtitle">The principles that guide everything we build</p>
-            
+            <div class="philosophy-intro">
+                <h2 class="headline fade-in">What We Believe</h2>
+                <p class="body-large fade-in" style="color: var(--gray-light); margin-top: 24px;">Five principles that guide everything we build</p>
+            </div>
             <div class="philosophy-grid">
-                <div class="philosophy-item" data-number="01">
-                    <h3 class="philosophy-title">Transparency by Design</h3>
+                <div class="philosophy-item fade-in">
+                    <div class="philosophy-number">01</div>
+                    <h3 class="title philosophy-title">Transparency by Design</h3>
                     <p class="philosophy-description">Open, auditable, and verifiable at every layer of the stack.</p>
                 </div>
-                <div class="philosophy-item" data-number="02">
-                    <h3 class="philosophy-title">Monetary Freedom</h3>
+                <div class="philosophy-item fade-in">
+                    <div class="philosophy-number">02</div>
+                    <h3 class="title philosophy-title">Monetary Freedom</h3>
                     <p class="philosophy-description">Everyone deserves access to the global financial system.</p>
                 </div>
-                <div class="philosophy-item" data-number="03">
-                    <h3 class="philosophy-title">Borderless and Always-On</h3>
+                <div class="philosophy-item fade-in">
+                    <div class="philosophy-number">03</div>
+                    <h3 class="title philosophy-title">Borderless and Always-On</h3>
                     <p class="philosophy-description">Finance that works 24/7, across every border on earth.</p>
                 </div>
-                <div class="philosophy-item" data-number="04">
-                    <h3 class="philosophy-title">Secure and Scarce</h3>
+                <div class="philosophy-item fade-in">
+                    <div class="philosophy-number">04</div>
+                    <h3 class="title philosophy-title">Secure and Scarce</h3>
                     <p class="philosophy-description">Sound money principles embedded in every product we ship.</p>
                 </div>
-                <div class="philosophy-item" data-number="05">
-                    <h3 class="philosophy-title">Infrastructure for Innovation</h3>
+                <div class="philosophy-item fade-in">
+                    <div class="philosophy-number">05</div>
+                    <h3 class="title philosophy-title">Infrastructure for Innovation</h3>
                     <p class="philosophy-description">Building the rails the next generation of finance runs on.</p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Features Section -->
     <section class="features" id="features">
-        <div class="container">
-            <div class="features-content">
-                <div class="features-text">
-                    <div class="section-number">03</div>
-                    <h2 class="section-title headline">Features</h2>
-                    <p class="section-subtitle">Powerful capabilities built for institutional scale</p>
-                </div>
-                
-                <div class="features-list">
-                    <div class="feature-item">
-                        <div class="feature-number">01</div>
-                        <h3 class="feature-title">Go Accounts</h3>
-                        <p class="feature-description">Fully qualified custodial accounts with regulatory compliance, reporting, and institutional governance built in.</p>
+        <div class="features-sticky">
+            <div class="container-wide">
+                <div class="feature-showcase">
+                    <div class="feature-content">
+                        <div class="feature-number">01 / 03</div>
+                        <h2 class="headline feature-title">Go Accounts</h2>
+                        <p class="body-large feature-description">Fully qualified custodial accounts with regulatory compliance, reporting, and institutional governance built in.</p>
                     </div>
-                    <div class="feature-item">
-                        <div class="feature-number">02</div>
-                        <h3 class="feature-title">Staking</h3>
-                        <p class="feature-description">Earn yield on digital assets through secure, non-custodial staking with full transparency and flexible terms.</p>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-number">03</div>
-                        <h3 class="feature-title">Settlement</h3>
-                        <p class="feature-description">Instant, off-chain settlement between counterparties — reducing risk and unlocking capital efficiency.</p>
-                    </div>
+                    <div class="feature-visual">🏦</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="clients" id="clients">
+    <!-- Clients Section -->
+    <section class="section clients" id="clients">
         <div class="container">
-            <div class="section-number">04</div>
-            <h2 class="section-title headline">Client Spotlights</h2>
-            <p class="section-subtitle">Trusted by industry leaders</p>
-            
-            <div class="clients-carousel">
-                <div class="swiper" id="clientsSwiper">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="client-slide">
-                                <p class="client-quote">"BitGo's infrastructure allowed us to scale our custody operations globally while maintaining the highest security standards."</p>
-                                <div class="client-author">
-                                    <div class="client-avatar">JM</div>
-                                    <div class="client-info">
-                                        <div class="name">James Mitchell</div>
-                                        <div class="role">CTO, Global Exchange</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="client-slide">
-                                <p class="client-quote">"The Go Network has transformed how we handle settlement — what took days now takes seconds with zero counterparty risk."</p>
-                                <div class="client-author">
-                                    <div class="client-avatar">SK</div>
-                                    <div class="client-info">
-                                        <div class="name">Sarah Kim</div>
-                                        <div class="role">Head of Operations, FinTech Corp</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="client-slide">
-                                <p class="client-quote">"Their Crypto-as-a-Service APIs let us embed digital assets into our platform in weeks, not months. Exceptional developer experience."</p>
-                                <div class="client-author">
-                                    <div class="client-avatar">RL</div>
-                                    <div class="client-info">
-                                        <div class="name">Raj Lakshmi</div>
-                                        <div class="role">VP Engineering, NeoBank</div>
-                                    </div>
+            <div class="clients-intro">
+                <h2 class="headline fade-in">Trusted by Industry Leaders</h2>
+                <p class="body-large fade-in" style="color: var(--gray-light); margin-top: 24px;">See how institutions worldwide build on BitGo</p>
+            </div>
+            <div class="swiper" id="clientsSwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="client-card">
+                            <p class="client-quote">"BitGo's infrastructure allowed us to scale our custody operations globally while maintaining the highest security standards."</p>
+                            <div class="client-author">
+                                <div class="client-avatar">JM</div>
+                                <div>
+                                    <div class="client-name">James Mitchell</div>
+                                    <div class="client-role">CTO, Global Exchange</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="swiper-pagination"></div>
+                    <div class="swiper-slide">
+                        <div class="client-card">
+                            <p class="client-quote">"The Go Network has transformed how we handle settlement — what took days now takes seconds."</p>
+                            <div class="client-author">
+                                <div class="client-avatar">SK</div>
+                                <div>
+                                    <div class="client-name">Sarah Kim</div>
+                                    <div class="client-role">Head of Operations, FinTech Corp</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="client-card">
+                            <p class="client-quote">"Their APIs let us embed digital assets into our platform in weeks, not months. Exceptional developer experience."</p>
+                            <div class="client-author">
+                                <div class="client-avatar">RL</div>
+                                <div>
+                                    <div class="client-name">Raj Lakshmi</div>
+                                    <div class="client-role">VP Engineering, NeoBank</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
     </section>
 
-    <section class="blog" id="resources">
+    <!-- Resources Section -->
+    <section class="section resources" id="resources">
         <div class="container">
-            <div class="section-number">05</div>
-            <h2 class="section-title headline">Resources</h2>
-            <p class="section-subtitle">Insights and research from our team</p>
-            
-            <div class="blog-grid">
-                <article class="blog-card magnetic">
-                    <div class="blog-image">
-                        <span class="blog-tag">Research</span>
+            <div class="resources-intro">
+                <h2 class="headline fade-in">Resources</h2>
+                <p class="body-large fade-in" style="color: rgba(255, 255, 255, 0.7); margin-top: 24px;">Insights and research from our team</p>
+            </div>
+            <div class="resources-grid">
+                <article class="resource-card fade-in">
+                    <div class="resource-image">
+                        <span class="resource-tag">Research</span>
+                        <div style="font-size: 48px;">📊</div>
                     </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">The Future of Institutional Custody in a Multi-Chain World</h3>
-                        <p class="blog-excerpt">How institutions are adapting their custody strategies for an increasingly fragmented blockchain landscape.</p>
-                        <a href="#" class="blog-link">Read more →</a>
-                    </div>
-                </article>
-                <article class="blog-card magnetic">
-                    <div class="blog-image">
-                        <span class="blog-tag">Product</span>
-                    </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">Introducing Go Network 2.0: Instant Settlement at Scale</h3>
-                        <p class="blog-excerpt">Our next-generation settlement layer brings atomic swaps and real-time finality to institutional trading.</p>
-                        <a href="#" class="blog-link">Read more →</a>
+                    <div class="resource-content">
+                        <h3 class="resource-title">The Future of Institutional Custody</h3>
+                        <p class="resource-excerpt">How institutions are adapting their custody strategies for an increasingly fragmented blockchain landscape.</p>
+                        <a href="#" class="resource-link">Read more →</a>
                     </div>
                 </article>
-                <article class="blog-card magnetic">
-                    <div class="blog-image">
-                        <span class="blog-tag">Guide</span>
+                <article class="resource-card fade-in">
+                    <div class="resource-image">
+                        <span class="resource-tag">Product</span>
+                        <div style="font-size: 48px;">🚀</div>
                     </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">Building Compliant Crypto-as-a-Service: A Developer's Guide</h3>
-                        <p class="blog-excerpt">Everything you need to know about embedding regulated digital asset services into your platform.</p>
-                        <a href="#" class="blog-link">Read more →</a>
+                    <div class="resource-content">
+                        <h3 class="resource-title">Go Network 2.0: Instant Settlement</h3>
+                        <p class="resource-excerpt">Our next-generation settlement layer brings atomic swaps and real-time finality to institutional trading.</p>
+                        <a href="#" class="resource-link">Read more →</a>
                     </div>
                 </article>
-                <article class="blog-card magnetic">
-                    <div class="blog-image">
-                        <span class="blog-tag">Analysis</span>
+                <article class="resource-card fade-in">
+                    <div class="resource-image">
+                        <span class="resource-tag">Guide</span>
+                        <div style="font-size: 48px;">🛠️</div>
                     </div>
-                    <div class="blog-content">
-                        <h3 class="blog-title">Digital Asset Adoption Trends in 2026</h3>
-                        <p class="blog-excerpt">A comprehensive look at how institutions are integrating digital assets into their portfolios and operations.</p>
-                        <a href="#" class="blog-link">Read more →</a>
+                    <div class="resource-content">
+                        <h3 class="resource-title">Developer's Guide to Crypto-as-a-Service</h3>
+                        <p class="resource-excerpt">Everything you need to know about embedding regulated digital asset services into your platform.</p>
+                        <a href="#" class="resource-link">Read more →</a>
+                    </div>
+                </article>
+                <article class="resource-card fade-in">
+                    <div class="resource-image">
+                        <span class="resource-tag">Analysis</span>
+                        <div style="font-size: 48px;">📈</div>
+                    </div>
+                    <div class="resource-content">
+                        <h3 class="resource-title">Digital Asset Adoption Trends in 2026</h3>
+                        <p class="resource-excerpt">A comprehensive look at how institutions are integrating digital assets into their portfolios.</p>
+                        <a href="#" class="resource-link">Read more →</a>
                     </div>
                 </article>
             </div>
         </div>
     </section>
 
-    <section class="cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2 class="headline">Ready to build the future of digital finance?</h2>
-                <p>Join 1,500+ institutions building on the most trusted digital asset infrastructure.</p>
-                <div class="cta-buttons">
-                    <a href="#" class="btn btn-primary magnetic">Get Started Today</a>
-                    <a href="#" class="btn btn-secondary magnetic">Talk to Sales</a>
-                </div>
+    <!-- CTA Section -->
+    <section class="section cta">
+        <div class="container text-center">
+            <h2 class="headline fade-in">Ready to build the future<br>of digital finance?</h2>
+            <p class="body-large cta-subtitle fade-in">Join 1,500+ institutions building on the most trusted digital asset infrastructure.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Get Started Today</a>
+                <a href="#" class="btn btn-secondary">Talk to Sales</a>
             </div>
         </div>
     </section>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
@@ -1245,7 +1072,7 @@
 
         // Smooth scrolling with Lenis
         const lenis = new Lenis({
-            duration: 1.2,
+            duration: 1.8,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smooth: true,
         });
@@ -1256,42 +1083,35 @@
         }
         requestAnimationFrame(raf);
 
-        // Custom cursor
-        const cursor = document.querySelector('.cursor');
-        const cursorDot = document.querySelector('.cursor-dot');
+        // Navigation color change
+        const sections = document.querySelectorAll('.section');
+        const navbar = document.getElementById('navbar');
 
-        if (window.innerWidth > 768) {
-            document.addEventListener('mousemove', (e) => {
-                gsap.to(cursor, {
-                    x: e.clientX - 10,
-                    y: e.clientY - 10,
-                    duration: 0.3,
-                    ease: "power2.out"
-                });
-                gsap.to(cursorDot, {
-                    x: e.clientX - 2,
-                    y: e.clientY - 2,
-                    duration: 0.1,
-                    ease: "power2.out"
-                });
-            });
-
-            // Magnetic effect
-            document.querySelectorAll('.magnetic').forEach(el => {
-                el.addEventListener('mouseenter', () => {
-                    gsap.to(cursor, { scale: 2, duration: 0.3 });
-                });
-                el.addEventListener('mouseleave', () => {
-                    gsap.to(cursor, { scale: 1, duration: 0.3 });
-                });
-            });
-        }
-
-        // Navigation scroll effect
-        ScrollTrigger.create({
-            start: "top -80",
-            end: 99999,
-            toggleClass: { className: "scrolled", targets: "#navbar" }
+        ScrollTrigger.batch(sections, {
+            onEnter: (elements) => {
+                const section = elements[0];
+                if (section.classList.contains('section-dark')) {
+                    navbar.classList.add('dark');
+                } else {
+                    navbar.classList.remove('dark');
+                }
+            },
+            onLeave: (elements) => {
+                const section = elements[0];
+                if (section.classList.contains('section-dark')) {
+                    navbar.classList.remove('dark');
+                } else {
+                    navbar.classList.add('dark');
+                }
+            },
+            onEnterBack: (elements) => {
+                const section = elements[0];
+                if (section.classList.contains('section-dark')) {
+                    navbar.classList.add('dark');
+                } else {
+                    navbar.classList.remove('dark');
+                }
+            }
         });
 
         // Mobile menu
@@ -1299,134 +1119,176 @@
         const navLinks = document.getElementById('navLinks');
 
         menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('open');
             navLinks.classList.toggle('open');
         });
 
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('open');
-                navLinks.classList.remove('open');
+        // Hero fade-ins: animate immediately on load
+        gsap.utils.toArray('.hero .fade-in').forEach((element, i) => {
+            gsap.fromTo(element, {
+                opacity: 0,
+                y: 40
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 1,
+                delay: 0.2 + i * 0.15,
+                ease: "power2.out"
             });
         });
 
-        // Hero animations
-        const heroTitle = document.getElementById('heroTitle');
-        const heroSubtitle = document.getElementById('heroSubtitle');
-        const heroStats = document.getElementById('heroStats');
-        const heroLabel = document.querySelector('.hero-label');
-
-        // Split text for hero title
-        const titleLines = heroTitle.querySelectorAll('.line');
-
-        const tl = gsap.timeline();
-
-        tl.to(heroLabel, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out"
-        })
-        .to(titleLines, {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            stagger: 0.1,
-            ease: "power2.out"
-        }, "-=0.3")
-        .to(heroSubtitle, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out"
-        }, "-=0.5")
-        .to(heroStats, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out"
-        }, "-=0.3");
-
-        // Horizontal scrolling products
-        let mm = gsap.matchMedia();
-
-        mm.add("(min-width: 768px)", () => {
-            const productsTrack = document.getElementById('productsTrack');
-            const productCards = productsTrack.querySelectorAll('.product-card');
-            const trackWidth = productsTrack.scrollWidth;
-            const containerWidth = window.innerWidth;
-
-            gsap.to(productsTrack, {
-                x: () => -(trackWidth - containerWidth),
-                ease: "none",
+        // All other fade-ins: animate on scroll
+        gsap.utils.toArray('.fade-in:not(.hero .fade-in)').forEach((element) => {
+            gsap.fromTo(element, {
+                opacity: 0,
+                y: 60
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power2.out",
                 scrollTrigger: {
-                    trigger: ".products-horizontal",
-                    start: "top top",
-                    end: () => "+=" + (trackWidth - containerWidth),
-                    pin: true,
-                    scrub: 1,
-                    invalidateOnRefresh: true
+                    trigger: element,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse"
                 }
             });
-
-            // Animate product cards
-            productCards.forEach((card, i) => {
-                gsap.fromTo(card, {
-                    opacity: 0,
-                    y: 50
-                }, {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "left 80%",
-                        end: "left 20%",
-                        containerAnimation: gsap.to(productsTrack, {
-                            x: () => -(trackWidth - containerWidth),
-                            ease: "none",
-                        }),
-                        toggleActions: "play none none reverse"
-                    }
-                });
-            });
         });
 
-        // Philosophy section animations
-        gsap.fromTo('.philosophy-item', {
-            opacity: 0,
-            y: 50
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            scrollTrigger: {
-                trigger: '.philosophy-grid',
-                start: "top 80%",
-                end: "bottom 20%",
-                toggleActions: "play none none reverse"
+        // Products sticky scroll
+        const productsData = [
+            {
+                title: "Prime Services",
+                description: "Institutional trading, financing, collateral management, and settlement — all from a single, unified platform.",
+                icon: "⚡"
+            },
+            {
+                title: "Ecosystem",
+                description: "Seamlessly integrate with exchanges, manage assets across chains, and connect to the broader digital asset ecosystem.",
+                icon: "🌐"
+            },
+            {
+                title: "Stablecoins",
+                description: "Enterprise wallet infrastructure and stablecoin issuance tools purpose-built for the next generation of digital dollars.",
+                icon: "🪙"
+            },
+            {
+                title: "Wallet Services",
+                description: "Institutional-grade, multi-signature wallet infrastructure with advanced policy controls and key management.",
+                icon: "🔐"
+            },
+            {
+                title: "Crypto-as-a-Service",
+                description: "Embed wallets, trading, and on/off ramps directly into your product with our developer-friendly API platform.",
+                icon: "🧩"
+            }
+        ];
+
+        let currentProduct = 0;
+        const productTitle = document.querySelector('.product-title');
+        const productDescription = document.querySelector('.product-description');
+        const productVisual = document.querySelector('.product-visual');
+        const productCounter = document.querySelector('.product-counter');
+
+        ScrollTrigger.create({
+            trigger: ".products",
+            start: "top top",
+            end: "bottom top",
+            pin: ".products-sticky",
+            onUpdate: (self) => {
+                const progress = self.progress;
+                const newProduct = Math.floor(progress * productsData.length);
+                
+                if (newProduct !== currentProduct && newProduct < productsData.length) {
+                    currentProduct = newProduct;
+                    const product = productsData[currentProduct];
+                    
+                    // Update content with smooth animation
+                    gsap.to([productTitle, productDescription, productVisual, productCounter], {
+                        opacity: 0,
+                        y: 20,
+                        duration: 0.3,
+                        onComplete: () => {
+                            productTitle.textContent = product.title;
+                            productDescription.textContent = product.description;
+                            productVisual.textContent = product.icon;
+                            productCounter.textContent = `0${currentProduct + 1} / 05`;
+                            
+                            gsap.to([productTitle, productDescription, productVisual, productCounter], {
+                                opacity: 1,
+                                y: 0,
+                                duration: 0.6,
+                                stagger: 0.1,
+                                ease: "power2.out"
+                            });
+                        }
+                    });
+                }
             }
         });
 
-        // Features section animations
-        gsap.fromTo('.feature-item', {
-            opacity: 0,
-            x: 50
-        }, {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            stagger: 0.2,
-            scrollTrigger: {
-                trigger: '.features-list',
-                start: "top 80%",
-                end: "bottom 20%",
-                toggleActions: "play none none reverse"
+        // Features sticky scroll
+        const featuresData = [
+            {
+                title: "Go Accounts",
+                description: "Fully qualified custodial accounts with regulatory compliance, reporting, and institutional governance built in.",
+                icon: "🏦"
+            },
+            {
+                title: "Staking",
+                description: "Earn yield on digital assets through secure, non-custodial staking with full transparency and flexible terms.",
+                icon: "📈"
+            },
+            {
+                title: "Settlement",
+                description: "Instant, off-chain settlement between counterparties — reducing risk and unlocking capital efficiency.",
+                icon: "🔄"
+            }
+        ];
+
+        let currentFeature = 0;
+        const featureTitle = document.querySelector('.feature-title');
+        const featureDescription = document.querySelector('.feature-description');
+        const featureVisual = document.querySelector('.feature-visual');
+        const featureNumber = document.querySelector('.feature-number');
+
+        ScrollTrigger.create({
+            trigger: ".features",
+            start: "top top",
+            end: "bottom top",
+            pin: ".features-sticky",
+            onUpdate: (self) => {
+                const progress = self.progress;
+                const newFeature = Math.floor(progress * featuresData.length);
+                
+                if (newFeature !== currentFeature && newFeature < featuresData.length) {
+                    currentFeature = newFeature;
+                    const feature = featuresData[currentFeature];
+                    
+                    // Update content with smooth animation
+                    gsap.to([featureTitle, featureDescription, featureVisual, featureNumber], {
+                        opacity: 0,
+                        x: -30,
+                        duration: 0.3,
+                        onComplete: () => {
+                            featureTitle.textContent = feature.title;
+                            featureDescription.textContent = feature.description;
+                            featureVisual.textContent = feature.icon;
+                            featureNumber.textContent = `0${currentFeature + 1} / 03`;
+                            
+                            gsap.to([featureTitle, featureDescription, featureVisual, featureNumber], {
+                                opacity: 1,
+                                x: 0,
+                                duration: 0.6,
+                                stagger: 0.1,
+                                ease: "power2.out"
+                            });
+                        }
+                    });
+                }
             }
         });
 
-        // Client spotlights carousel
+        // Clients Swiper
         const clientsSwiper = new Swiper('#clientsSwiper', {
             slidesPerView: 1,
             spaceBetween: 32,
@@ -1449,96 +1311,20 @@
             }
         });
 
-        // Blog cards animation
-        gsap.fromTo('.blog-card', {
-            opacity: 0,
-            y: 50
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.1,
-            scrollTrigger: {
-                trigger: '.blog-grid',
-                start: "top 80%",
-                end: "bottom 20%",
-                toggleActions: "play none none reverse"
-            }
-        });
-
-        // Section title animations
-        gsap.utils.toArray('.section-title').forEach(title => {
-            gsap.fromTo(title, {
-                opacity: 0,
-                y: 50
+        // Parallax effects
+        gsap.utils.toArray('.parallax-element').forEach(element => {
+            gsap.fromTo(element, {
+                y: -50
             }, {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-                scrollTrigger: {
-                    trigger: title,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        });
-
-        // Scroll progress
-        gsap.to('.scroll-progress', {
-            scaleX: 1,
-            transformOrigin: "left center",
-            ease: "none",
-            scrollTrigger: {
-                start: "top top",
-                end: "max",
-                scrub: 0.3
-            }
-        });
-
-        // Parallax effect for section numbers
-        gsap.utils.toArray('.section-number').forEach(number => {
-            gsap.fromTo(number, {
-                y: 100
-            }, {
-                y: -100,
+                y: 50,
                 ease: "none",
                 scrollTrigger: {
-                    trigger: number,
+                    trigger: element,
                     start: "top bottom",
                     end: "bottom top",
                     scrub: true
                 }
             });
-        });
-
-        // CTA animation
-        gsap.fromTo('.cta-content', {
-            opacity: 0,
-            y: 50
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            scrollTrigger: {
-                trigger: '.cta',
-                start: "top 80%",
-                toggleActions: "play none none reverse"
-            }
-        });
-
-        // Footer animation
-        gsap.fromTo('.footer-content', {
-            opacity: 0,
-            y: 50
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            scrollTrigger: {
-                trigger: 'footer',
-                start: "top 90%",
-                toggleActions: "play none none reverse"
-            }
         });
 
         // Update ScrollTrigger on window resize
